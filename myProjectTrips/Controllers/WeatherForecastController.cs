@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using myProject_trips;
 
-namespace myProject_trips.Controllers
+namespace myProjectTrips.Controllers
 {
     [ApiController]
     [Route("[controller]")]

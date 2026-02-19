@@ -14,24 +14,23 @@ namespace Repository.Entities
         NatureReserve,
         HikingTrail
     }
-    public class Branches
+    public class Branch
     {
         public int BranchId { get; set; }
         public string BranchName { get; set; }
         public bool IsFree { get; set; }
         public bool IsWet { get; set; }
         public TimeOnly Duration { get; set; }
-        public AgeGroup AgeGroup { get; set; }
-        [ForeignKey("AgeGroupId")]
+        public AgeGroupEnum AgeGroup { get; set; }
         public string Description { get; set; }
-        public bool IsOpen { get; set; }
-        public Location Location { get; set; }
         public AttractionCategoryEnum attractionCategory { get; set; }
-        public Comments Comments { get; set; }
         public string ImageUrl { get; set; }
-        public int Points { get; set; } //מוגבל ל-5
+        public int Points { get; set; }
+        public Direction direction { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
 
-        public ICollection<RouteAvailability> RouteAvailabilities { get; set; }
-        public ICollection<Comments> CommentsList { get; set; }
+        public ICollection<List<Availability>> RouteAvailabilities { get; set; }
+        public ICollection<Comment> CommentsList { get; set; }
     }
 }
