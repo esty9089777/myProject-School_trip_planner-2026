@@ -6,7 +6,13 @@ namespace myProjectTrips.model
 {
     public class TripContext : DbContext, IContext
     {
-        private readonly string _connectionString;
+        public TripContext() { }
+
+        public TripContext(DbContextOptions<TripContext> options):base(options)
+        {
+        }
+
+        private readonly string? _connectionString;
         public TripContext(string connectionString)
         {
             _connectionString = connectionString;
@@ -25,12 +31,13 @@ namespace myProjectTrips.model
         }
 
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Branch>()
-    .HasIndex(b => b.BranchName);
+                .HasIndex(b => b.BranchName);
 
             modelBuilder.Entity<Branch>()
                 .HasIndex(b => b.direction);
