@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Common.Dto;
+using Repository.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +14,12 @@ namespace Service.Services
         string path = Directory.GetCurrentDirectory() + "/Images/";
         public MapperProfile()
         {
+            CreateMap<User, UserDto>().ReverseMap();
+            CreateMap<Route, RouteDto>().ReverseMap();
+            CreateMap<Attraction, AttractionDto>().ReverseMap();
+            CreateMap<Comment, CommentDto>().ReverseMap();
+            CreateMap<Availability, AvailabilityDto>().ReverseMap();
+            CreateMap<Branch, BranchDto>();
         }
 
         public byte[] myConvert(string url)

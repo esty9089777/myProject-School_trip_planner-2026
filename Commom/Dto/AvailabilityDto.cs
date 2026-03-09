@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Common.Dto
 {
-    internal class AvailabilityDto
+    public class AvailabilityDto
     {
         public int AvailabilityId { get; set; }
         public int AttractionOrRouteId { get; set; }

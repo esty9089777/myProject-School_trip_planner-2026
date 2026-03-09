@@ -6,17 +6,17 @@ namespace myProjectTrips.model
 {
     public class TripContext : DbContext, IContext
     {
-        public TripContext() { }
+        //public TripContext() { }
 
         public TripContext(DbContextOptions<TripContext> options):base(options)
         {
         }
 
-        private readonly string? _connectionString;
-        public TripContext(string connectionString)
-        {
-            _connectionString = connectionString;
-        }
+        //private readonly string? _connectionString;
+        //public TripContext(string connectionString)
+        //{
+        //    _connectionString = connectionString;
+        //}
 
         public virtual DbSet<Availability> Availabilities { get; set; }
         public virtual DbSet<Attraction> Attractions { get; set; }

@@ -19,7 +19,7 @@ builder.Services.AddControllers();
 
 var connection = builder.Configuration.GetConnectionString("databasa-myComputer");
 
-builder.Services.AddSingleton<IContext>(new TripContext(connection));
+//builder.Services.AddSingleton<IContext>(new TripContext(connection));
 
 builder.Services.AddDbContext<TripContext>(option => option.UseSqlServer(connection));
 builder.Services.AddScoped<IContext>(provider => provider.GetRequiredService<TripContext>());

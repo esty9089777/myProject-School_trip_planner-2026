@@ -39,7 +39,10 @@ namespace Repository.Entities
         public double Latitude { get; set; }
         public double Longitude { get; set; }
 
-        public ICollection<List<Availability>> RouteAvailabilities { get; set; }
+        public int CreatorId { get; set; }
+        public User Creator { get; set; }
+
+        public ICollection<Availability> RouteAvailabilities { get; set; } = new List<Availability>();
         public ICollection<Comment> CommentsList { get; set; }
     }
 }

@@ -11,5 +11,6 @@ namespace Common.Dto
         public string Description { get; set; }
         public string ImageUrl { get; set; }
         public int Points { get; set; }
+        public List<AvailabilityDto> Availabilities { get; set; }
     }
 }

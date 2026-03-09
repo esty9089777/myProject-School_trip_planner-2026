@@ -30,7 +30,7 @@ namespace Repository.Entities
         public double Latitude { get; set; }
         public double Longitude { get; set; }
 
-        public ICollection<List<Availability>> RouteAvailabilities { get; set; }
+        public ICollection<Availability> RouteAvailabilities { get; set; } = new List<Availability>();
         public ICollection<Comment> CommentsList { get; set; }
     }
 }
