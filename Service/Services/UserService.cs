@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Common.Dto;
 using Repository.Entities;
+using Repository.Interfaces;
 using Service.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -10,18 +11,28 @@ using System.Threading.Tasks;
 
 namespace Service.Services
 {
-    public class UserService : IUserService
+    public class UserService:IUserService
     {
-        private readonly IRepository<User> _userRepository;
+        private readonly IRepository<User> _repository;
         private readonly IMapper _mapper;
-        public Task<List<User>> GetAll()
+
+        public UserService(IRepository<User> repository, IMapper mapper)
         {
-            throw new NotImplementedException();
+            _repository = repository;
+            _mapper = mapper;
+        }
+        public async Task<List<UserDto>> GetAll()
+        {
+            var user = await _repository.GetAll();
+            var userDtos = _mapper.Map<List<UserDto>>(user);
+            return userDtos;
         }
 
-        public Task<User> GetById(int id)
+        public async Task<UserDto> GetById(int id)
         {
-            throw new NotImplementedException();
+            var user = await _repository.GetById(id);
+            var userDto = _mapper.Map<UserDto>(user);
+            return userDto;
         }
 
         public Task<User> Add(User item)

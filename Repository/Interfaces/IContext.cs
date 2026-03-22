@@ -11,6 +11,7 @@ namespace myProjectTrips.Interfaces
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Route> Routes { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Trip> Trips { get; set; }
 
         public Task Save();
     }
