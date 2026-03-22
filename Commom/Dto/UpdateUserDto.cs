@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Common.Dto
 {
-    internal class UpdateUserDto
+    public class UpdateUserDto
     {
+        public string UserName { get; set; }
+        public string UserPhoneNumber { get; set; }
     }
 }

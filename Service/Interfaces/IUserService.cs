@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace Service.Interfaces
 {
-    public interface IUserService
+    public interface IUserService: IService<User>
     {
         UserDto Register(RegisterDto register);
         UserDto Login(LoginDto login);
-        UserDto UpdateProfile(int userId, UserDto userDto);
+        UserDto UpdateProfile(int userId, UpdateUserDto updateUserDto);
         void ChangePassword(int userId, ChangePasswordDto changePasswordDto);
         void ResetPassword(string email);
         void AddAttraction(int userId, BranchDto branchDto);
