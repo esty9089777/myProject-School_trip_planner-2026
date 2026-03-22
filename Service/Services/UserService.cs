@@ -97,5 +97,15 @@ namespace Service.Services
         {
             throw new NotImplementedException();
         }
+
+        Task<List<User>> IService<User>.GetAll()
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<User> IService<User>.GetById(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
