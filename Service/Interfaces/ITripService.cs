@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Service.Interfaces
 {
-    public interface ITripService
+    public interface ITripService:IService<Trip>
     {
         TripDto CreateTrip(TripDto tripDto);
         TripDto GetTripById(int tripId);

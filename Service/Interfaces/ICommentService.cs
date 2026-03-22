@@ -1,4 +1,5 @@
 ﻿using Common.Dto;
+using Repository.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Service.Interfaces
 {
-    public interface ICommentService
+    public interface ICommentService:IService<Comment>
     {
         void AddComment(int userId, int? branchId, int? routeId, string content);
         CommentDto GetCommentById(int commentId);
