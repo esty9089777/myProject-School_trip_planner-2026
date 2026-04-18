@@ -35,27 +35,48 @@ namespace Service.Services
             return userDto;
         }
 
-        public Task<User> Add(User item)
+        public async Task<UserDto> Add(UserDto item)
         {
-            throw new NotImplementedException();
+            var userEntity = _mapper.Map<User>(item);
+            var addedUser = await _repository.Add(userEntity);
+            return _mapper.Map<UserDto>(addedUser);
         }
 
-        public Task<User> Update(int id, User item)
+        public async Task<UserDto> Update(int id, UserDto item)
         {
-            throw new NotImplementedException();
+            var userEntity = _mapper.Map<User>(item);
+            var updatedUser = await _repository.Update(id, userEntity);
+            return _mapper.Map<UserDto>(updatedUser);
         }
 
-        public Task Delete(int id)
+        public async Task Delete(int id)
         {
-            throw new NotImplementedException();
+            await _repository.Delete(id);
         }
-        public UserDto Register(RegisterDto register)
+
+        public async Task<UserDto> Register(RegisterDto register)
         {
-            throw new NotImplementedException();
+            var user = await _repository.GetByUsername(register.UserName);
+            if (user != null)
+            {
+                throw new Exception("User already exists");
+            }
+            var userEntity = _mapper.Map<User>(register);
+            var addedUser = await _repository.Add(userEntity);
+
+            return _mapper.Map<UserDto>(addedUser);
         }
-        public UserDto Login(LoginDto login)
+
+        public async UserDto Login(LoginDto login)
         {
-            throw new NotImplementedException();
+            var user = await _repository.GetByUsername(login.Email);
+            if (user == null)
+                throw new Exception("User not found");
+
+            if (user.Password != login.Password)
+                throw new Exception("Wrong password");
+
+            return _mapper.Map<UserDto>(user);
         }
         public UserDto UpdateProfile(int userId, UpdateUserDto updateUserDto)
         {
