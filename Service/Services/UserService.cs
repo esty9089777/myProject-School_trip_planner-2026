@@ -78,17 +78,47 @@ namespace Service.Services
 
             return _mapper.Map<UserDto>(user);
         }
-        public UserDto UpdateProfile(int userId, UpdateUserDto updateUserDto)
+        public async Task<UserDto> UpdateProfile(int userId, UpdateUserDto updateUserDto)
         {
-            throw new NotImplementedException();
+            var user = _mapper.Map<User>(updateUserDto);
+            user.UserId = userId;
+            return await _repository.Update(user);
         }
-        public void ChangePassword(int userId, ChangePasswordDto changePasswordDto)
+        public async Task ChangePassword(int userId, ChangePasswordDto changePasswordDto)
         {
-            throw new NotImplementedException();
+            var user = await _repository.GetById(userId);
+            if (user == null)
+            {
+                throw new Exception("User not found");
+            }
+            if (changePasswordDto.CurrentPassword != user.UserPassword)
+            {
+                throw new Exception("Current password is incorrect");
+            }
+            if (changePasswordDto.CurrentPassword == changePasswordDto.NewPassword)
+            {
+                throw new Exception("New password cannot be the same as the current password");
+            }
+            if (changePasswordDto.NewPassword != changePasswordDto.ConfirmNewPassword)
+            {
+                throw new Exception("New password and confirmation do not match");
+            }
+            user.UserPassword = changePasswordDto.NewPassword;
+            await _repository.Update(user);
         }
-        public void ResetPassword(string email)
+        public async Task ResetPassword(ResetPasswordDto dto)
         {
-            throw new NotImplementedException();
+            var user = await _repository.GetByEmail(dto.Email);
+            if (user == null)
+            {
+                throw new Exception("User not found");
+            }
+            if (dto.NewPassword != dto.ConfirmNewPassword)
+            {
+                throw new Exception("New password and confirmation do not match");
+            }
+            user.UserPassword = dto.NewPassword;
+            await _repository.Update(user);
         }
         public void AddAttraction(int userId, BranchDto branchDto)
         {
