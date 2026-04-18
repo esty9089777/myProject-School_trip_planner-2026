@@ -11,8 +11,8 @@ namespace Service.Interfaces
     {
         BranchDto GetAllBranches();
         BranchDto GetBranchById(int id);
-        BranchDto AddBranch(CreateBranchDto dto);
-        void UpdateBranch(int id, UpdateBranchDto dto);
+        BranchDto AddBranch(BranchDto dto);
+        void UpdateBranch(int id, BranchDto dto);
         void DeleteBranch(int id);
         BranchDto FilterBranches(BranchFilterDto filter);
         BranchDto GetNearbyBranches(double lat, double lng);
