@@ -120,17 +120,44 @@ namespace Service.Services
             user.UserPassword = dto.NewPassword;
             await _repository.Update(user);
         }
-        public void AddAttraction(int userId, BranchDto branchDto)
+        public async Task AddAttraction(UserDto userDto, AttractionDto dto)
         {
-            throw new NotImplementedException();
+            if (userDto == null)
+            {
+                throw new Exception("User not found");
+            }
+            var attraction = _mapper.Map<Attraction>(dto);
+            var existingAttraction = await _repository.GetAttractionById(attraction.AttractionId);
+            var user = _mapper.Map<User>(userDto);
+
+            if (existingAttraction == null)
+            {
+                await _repository.AddAttraction(attraction, user);
+            }
+            var branch = new Branch
+            {
+                BranchName = attraction.AttraName,
+                
+            };
+            await _repository.AddBranch(branch);
         }
         public void AddRoute(int userId, RouteDto routeDto)
         {
             throw new NotImplementedException();
         }
-        public void RemoveAtraction(int userId, int branchId)
+        public async Task RemoveAttraction(int userId, int attractionId)
         {
-            throw new NotImplementedException();
+            Attraction attraction = await _repository.GetAttractionById(attractionId);
+
+            if (attraction == null)
+            {
+                throw new Exception("Attraction not found");
+            }
+            if (userId != attraction.CreatorId)
+            {
+                throw new Exception("User is not the creator of the attraction");
+            }
+            await _repository.RemoveAttraction(attraction, userId);
         }
         public void RemoveRoute(int userId, int routeId)
         {
@@ -155,6 +182,56 @@ namespace Service.Services
         }
 
         Task<User> IService<User>.GetById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        UserDto IUserService.Register(RegisterDto register)
+        {
+            throw new NotImplementedException();
+        }
+
+        UserDto IUserService.UpdateProfile(int userId, UpdateUserDto updateUserDto)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ResetPassword(string email)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task AddAttraction(int userId, BranchDto branchDto)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task IUserService.AddRoute(int userId, RouteDto routeDto)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task IUserService.RemoveAtraction(int userId, int branchId)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task IUserService.RemoveRoute(int userId, int routeId)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task IUserService.DeleteUser(int userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<User> Add(User item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<User> Update(int id, User item)
         {
             throw new NotImplementedException();
         }
