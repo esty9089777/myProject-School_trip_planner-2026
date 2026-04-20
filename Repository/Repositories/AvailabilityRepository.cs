@@ -12,49 +12,49 @@ namespace Repository.Repositories
 {
     public class AvailabilityRepository : IAvailabilityRepository
     {
-        public Task<Availability> Add(Availability item)
+        private readonly IContext ctx;
+
+        public AvailabilityRepository(IContext ctx)
         {
-            throw new NotImplementedException();
+            this.ctx = ctx;
         }
 
-        public Task<Availability> AddAvailability(Availability dto)
+        public async Task<Availability> Add(Availability item)
         {
-            throw new NotImplementedException();
+            await ctx.Availabilities.AddAsync(item);
+            await ctx.Save();
+            return item;
         }
 
-        public Task Delete(int id)
+        public async Task Delete(int id)
         {
-            throw new NotImplementedException();
+            var a = await ctx.Availabilities.FirstOrDefaultAsync(x => x.AvailabilityId == id);
+            if (a == null)
+            {
+                throw new Exception("Availability not found");
+            }
+            ctx.Availabilities.Remove(a);
+            await ctx.Save();
         }
 
-        public Task DeleteAvailability(int id)
+        public async Task<List<Availability>> GetAll()
         {
-            throw new NotImplementedException();
+            return await ctx.Availabilities.ToListAsync();
         }
 
-        public Task<List<Availability>> GetAll()
+        public async Task<Availability> GetAvailabilityByAttractionId(int attractionId)
         {
-            throw new NotImplementedException();
+            return await ctx.Availabilities.FirstOrDefaultAsync(x => x.AttractionId == attractionId);
         }
 
-        public Task<Availability> GetAvailabilityByAttractionId(int attractionId)
+        public async Task<Availability> GetAvailabilityByBranchId(int branchId)
         {
-            throw new NotImplementedException();
+            return await ctx.Availabilities.FirstOrDefaultAsync(x => x.BranchId == branchId);
         }
 
-        public Task<Availability> GetAvailabilityByBranchId(int branchId)
+        public async Task<Availability> GetAvailabilityByRouteId(int routeId)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<Availability> GetAvailabilityById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Availability> GetAvailabilityByRouteId(int routeId)
-        {
-            throw new NotImplementedException();
+            return await ctx.Availabilities.FirstOrDefaultAsync(x => x.RouteId == routeId);
         }
 
         public Task<Availability> GetByEmail(string email)
@@ -64,27 +64,46 @@ namespace Repository.Repositories
 
         public Task<Availability> GetById(int id)
         {
-            throw new NotImplementedException();
+            return ctx.Availabilities.FirstOrDefaultAsync(x => x.AvailabilityId == id);
         }
 
-        public Task<Availability> IsBranchAvailable(int branchId, DayOfWeek day, TimeOnly time)
+        public async Task<Availability> IsBranchAvailable(int branchId, DayOfWeek day, TimeOnly time)
         {
-            throw new NotImplementedException();
+            return await ctx.Availabilities
+                    .FirstOrDefaultAsync(x => x.BranchId == branchId &&
+                    x.Day == day &&
+                    time >= x.OpenTime &&
+                    time <= x.CloseTime);
         }
 
-        public Task<Availability> IsRouteAvailable(int routeId, DayOfWeek day, TimeOnly time)
+        public async Task<Availability> IsRouteAvailable(int routeId, DayOfWeek day, TimeOnly time)
         {
-            throw new NotImplementedException();
+            return await ctx.Availabilities
+                    .FirstOrDefaultAsync(x => x.RouteId == routeId &&
+                    x.Day == day &&
+                    time >= x.OpenTime &&
+                    time <= x.CloseTime);
         }
 
-        public Task<Availability> Update(int id, Availability item)
+        public async Task<Availability> Update(int id, Availability item)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateAvailability(int id, Availability dto)
-        {
-            throw new NotImplementedException();
+            var a = await ctx.Availabilities.FirstOrDefaultAsync(x => x.AvailabilityId == id);
+            if (a == null)
+            {
+                throw new Exception("Availability not found");
+            }
+            a.AvailabilityId = id;
+            a.AttractionId = item.AttractionId;
+            a.BranchId = item.BranchId;
+            a.RouteId = item.RouteId;
+            a.Attraction = item.Attraction;
+            a.Branch = item.Branch;
+            a.Route = item.Route;
+            a.Day = item.Day;
+            a.OpenTime = item.OpenTime;
+            a.CloseTime = item.CloseTime;
+            await ctx.Save();
+            return a;
         }
     }
 }
