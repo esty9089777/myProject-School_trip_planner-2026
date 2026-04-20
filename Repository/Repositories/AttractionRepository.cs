@@ -14,9 +14,13 @@ namespace Repository.Repositories
     {
         private readonly IContext ctx;
 
+        public AttractionRepository(IContext ctx)
+        {
+            this.ctx = ctx;
+        }
         public async Task<Attraction> Add(Attraction item)
         {
-            ctx.Attractions.AddAsync(item);
+            await ctx.Attractions.AddAsync(item);
             await ctx.Save();
             return item;
         }
@@ -24,6 +28,10 @@ namespace Repository.Repositories
         public async Task Delete(int id)
         {
             var a = ctx.Attractions.FirstOrDefault(x=>x.AttractionId == id);
+            if(a == null)
+            {
+                throw new Exception("Attraction not found");
+            }
             ctx.Attractions.Remove(a);
             await ctx.Save();
         }
@@ -31,11 +39,6 @@ namespace Repository.Repositories
         public async Task<List<Attraction>> GetAll()
         {
             return await ctx.Attractions.ToListAsync();
-        }
-
-        public async Task<Attraction> GetByEmail(string email)
-        {
-            return await ctx.Attractions.FirstOrDefaultAsync(x => x.AttraName == email);
         }
 
         public async Task<Attraction> GetById(int id)
