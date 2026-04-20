@@ -10,7 +10,6 @@ namespace Repository.Interfaces
     public interface ITripRepository:IRepository<Trip>
     {
         Task<Trip> CreateTrip(Trip tripDto);
-        Task<Trip> GetTripById(int tripId);
         Task<List<Trip>> GetTripsByUserId(int userId);
 
     }
