@@ -18,6 +18,8 @@ namespace Repository.Entities
     {
         public int BranchId { get; set; }
         public string BranchName { get; set; }
+        public int AttractionId { get; set; }
+        public Attraction Attraction { get; set; }
         public bool IsFree { get; set; }
         public bool IsWet { get; set; }
         public TimeOnly Duration { get; set; }
