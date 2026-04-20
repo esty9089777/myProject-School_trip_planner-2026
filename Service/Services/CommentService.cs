@@ -83,5 +83,29 @@ namespace Service.Services
             throw new NotImplementedException();
         }
 
+        Task<List<Comment>> IService<Comment>.GetAll()
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<Comment> IService<Comment>.GetById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<Comment> IService<Comment>.Add(Comment item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Comment> Update(int id, Comment item)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task IService<Comment>.Delete(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

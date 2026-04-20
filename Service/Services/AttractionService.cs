@@ -52,17 +52,7 @@ namespace Service.Services
             throw new NotImplementedException();
         }
 
-        public BranchDto AddBranch(int attractionId, BranchDto branchDto)
-        {
-            throw new NotImplementedException();
-        }
-
         public void DeleteAttraction(int attractionId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void DeleteBranch(int branchId)
         {
             throw new NotImplementedException();
         }
@@ -72,22 +62,22 @@ namespace Service.Services
             throw new NotImplementedException();
         }
 
-        public BranchDto GetBranchById(int branchId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<BranchDto> GetBranchesByAttractionId(int attractionId)
-        {
-            throw new NotImplementedException();
-        }
-
         public void UpdateAttraction(int attractionId, AttractionDto attractionDto)
         {
             throw new NotImplementedException();
         }
 
-        public void UpdateBranch(int branchId, BranchDto branchDto)
+        AttractionDto IAttractionService.AddAttraction(AttractionDto attractionDto)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task IAttractionService.UpdateAttraction(int attractionId, AttractionDto attractionDto)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task IAttractionService.DeleteAttraction(int attractionId)
         {
             throw new NotImplementedException();
         }

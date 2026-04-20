@@ -46,7 +46,7 @@ namespace Service.Services
 
         public async Task<List<TripDto>> GetTripsByUserId(int userId)
         {
-
+            
         }
 
         public async Task<List<TripDto>> GetAll()
@@ -63,5 +63,34 @@ namespace Service.Services
             return tripDto;
         }
 
+        List<TripDto> ITripService.GetTripsByUserId(int userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<List<Trip>> IService<Trip>.GetAll()
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<Trip> IService<Trip>.GetById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<Trip> IService<Trip>.Add(Trip item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Trip> Update(int id, Trip item)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task IService<Trip>.Delete(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
