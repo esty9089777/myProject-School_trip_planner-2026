@@ -9,12 +9,12 @@ namespace Service.Interfaces
 {
     public interface IBranchService
     {
-        BranchDto GetAllBranches();
-        BranchDto GetBranchById(int id);
-        BranchDto AddBranch(BranchDto dto);
-        void UpdateBranch(int id, BranchDto dto);
-        void DeleteBranch(int id);
-        BranchDto FilterBranches(BranchFilterDto filter);
-        BranchDto GetNearbyBranches(double lat, double lng);
+        Task<List<BranchDto>> GetAllBranches();
+        Task<BranchDto> GetBranchById(int id);
+        Task<List<BranchDto>> GetBranchesByAttractionId(int AttractionId);
+        Task<BranchDto> AddBranch(int AttractionId, BranchDto dto);
+        Task UpdateBranch(int id, BranchDto dto);
+        Task DeleteBranch(int id);
+        Task<BranchDto> GetNearbyBranches(double lat, double lng);
     }
 }

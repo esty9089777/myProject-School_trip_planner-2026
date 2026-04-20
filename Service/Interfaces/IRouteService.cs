@@ -10,9 +10,9 @@ namespace Service.Interfaces
 {
     public interface IRouteService:IService<Route>
     {
-        void AddRoute(RouteDto routeDto);
-        void UpdateRoute(int routeId, RouteDto routeDto);
-        void DeleteRoute(int routeId);
-        RouteDto GetRouteById(int routeId);
+        Task AddRoute(RouteDto routeDto);
+        Task UpdateRoute(int routeId, RouteDto routeDto);
+        Task DeleteRoute(int routeId);
+        Task<RouteDto> GetRouteById(int routeId);
     }
 }

@@ -10,12 +10,12 @@ namespace Service.Interfaces
 {
     public interface ICommentService:IService<Comment>
     {
-        void AddComment(int userId, int? branchId, int? routeId, string content);
-        CommentDto GetCommentById(int commentId);
-        List<CommentDto> GetCommentByBranchId(int branchId);
-        List<CommentDto> GetCommentByRouteId(int routeId);
-        List<CommentDto> GetCommentsByUserId(int userId);
-        void DeleteComment(int commentId);
-        void UpdateComment(int commentId, string content);
+        Task AddComment(int userId, int? branchId, int? routeId, string content);
+        Task<CommentDto> GetCommentById(int commentId);
+        Task<List<CommentDto>> GetCommentByBranchId(int branchId);
+        Task<List<CommentDto>> GetCommentByRouteId(int routeId);
+        Task<List<CommentDto>> GetCommentsByUserId(int userId);
+        Task DeleteComment(int commentId);
+        Task UpdateComment(int commentId, string content);
     }
 }

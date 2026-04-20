@@ -11,8 +11,8 @@ namespace Service.Interfaces
     public interface IAttractionService:IService<Attraction>
     {
         AttractionDto AddAttraction(AttractionDto attractionDto);
-        void UpdateAttraction(int attractionId, AttractionDto attractionDto);
-        void DeleteAttraction(int attractionId);
+        Task UpdateAttraction(int attractionId, AttractionDto attractionDto);
+        Task DeleteAttraction(int attractionId);
         AttractionDto GetAttractionById(int attractionId);
     }
 }
