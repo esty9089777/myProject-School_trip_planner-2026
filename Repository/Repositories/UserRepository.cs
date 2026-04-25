@@ -80,9 +80,15 @@ namespace Repository.Repositories
             await _ctx.Save();
         }
 
-        public Task ChangePassword(int userId, string newPassword)
+        public async Task ChangePassword(int userId, string newPassword)
         {
-            throw new NotImplementedException();
+            var user = await _ctx.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+            if (user == null)
+            {
+                throw new Exception("User not found");
+            }
+            user.UserPassword = newPassword;
+            await _ctx.Save();
         }
 
         public async Task Delete(int id)
@@ -111,34 +117,54 @@ namespace Repository.Repositories
             return await _ctx.Users.FirstOrDefaultAsync(x => x.UserId == id);
         }
 
-        public Task<Trip> GetTrip(int userId, int tripId)
+        public async Task<Trip> GetTrip(int userId, int tripId)
         {
-            throw new NotImplementedException();
+            return await _ctx.Trips.FirstOrDefaultAsync(t => t.TripId == tripId && t.UserId == userId);
         }
 
-        public Task<List<Trip>> GetUserTrips(int userId)
+        public async Task<List<Trip>> GetUserTrips(int userId)
         {
-            throw new NotImplementedException();
+            return await _ctx.Trips.Where(t => t.UserId == userId).ToListAsync();
         }
 
-        public Task<User> Login(string email)
+        public async Task<User> Login(string email)
         {
-            throw new NotImplementedException();
+            return await _ctx.Users.FirstOrDefaultAsync(u => u.UserEmail == email);
         }
 
-        public Task RemoveAttraction(int userId, int attractionId)
+        public async Task RemoveAttraction(int userId, int attractionId)
         {
-            throw new NotImplementedException();
+            var a = await _ctx.Attractions.FirstOrDefaultAsync
+                (x => x.AttractionId == attractionId && x.CreatorId == userId);
+            if (a == null)
+            {
+                throw new Exception("Attraction not found");
+            }
+            _ctx.Attractions.Remove(a);
+            await _ctx.Save();
         }
 
-        public Task RemoveRoute(int userId, int routeId)
+        public async Task RemoveRoute(int userId, int routeId)
         {
-            throw new NotImplementedException();
+            var r = await _ctx.Routes.FirstOrDefaultAsync
+                (x => x.RouteId == routeId && x.CreatorId == userId);
+            if (r == null)
+            {
+                throw new Exception("Route not found");
+            }
+            _ctx.Routes.Remove(r);
+            await _ctx.Save();
         }
 
-        public Task ResetPassword(string email)
+        public async Task ResetPassword(string email)
         {
-            throw new NotImplementedException();
+            var user = await _ctx.Users.FirstOrDefaultAsync(u => u.UserEmail == email);
+            if (user == null)
+            {
+                throw new Exception("User not found");
+            }
+            user.UserPassword = "ab12#$%BO794*31A";
+            await _ctx.Save();
         }
 
         public async Task<User> Update(int id, User item)
