@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using myProjectTrips.Interfaces;
 using Repository.Entities;
 using Repository.Interfaces;
@@ -12,39 +13,41 @@ namespace Repository.Repositories
 {
     internal class BranchRepository : IBranchRepository
     {
-        private readonly IContext ctx;
-        public BranchRepository(IContext context)
+        private readonly IContext _ctx;
+        private readonly IMapper _mapper;
+        public BranchRepository(IContext context, IMapper mapper)
         {
-            ctx = context;
+            _ctx = context;
+            _mapper = mapper;
         }
 
         public async Task<Branch> Add(Branch item)
         {
-            await ctx.Branches.AddAsync(item);
-            await ctx.Save();
+            await _ctx.Branches.AddAsync(item);
+            await _ctx.Save();
             return item;
         }
 
         public async Task Delete(int id)
         {
-            var b = ctx.Branches.FirstOrDefault(x => x.BranchId == id);
+            var b = await _ctx.Branches.FirstOrDefaultAsync(x => x.BranchId == id);
             if (b == null)
             {
                 throw new Exception("Branch not found");
             }
-            ctx.Branches.Remove(b);
-            await ctx.Save();
+            _ctx.Branches.Remove(b);
+            await _ctx.Save();
         }
 
         public async Task<List<Branch>> GetAll()
         {
-            return await ctx.Branches.ToListAsync();
+            return await _ctx.Branches.ToListAsync();
         }
 
         public async Task<List<Branch>> GetBranchesByAttractionId(int attractionId)
         {
-            return await ctx.Branches
-                    .Where(x => x.BranchId == attractionId)
+            return await _ctx.Branches
+                    .Where(x => x.AttractionId == attractionId)
                     .ToListAsync();
         }
 
@@ -55,14 +58,14 @@ namespace Repository.Repositories
 
         public Task<Branch> GetById(int id)
         {
-            return ctx.Branches.FirstOrDefaultAsync(x => x.BranchId == id);
+            return _ctx.Branches.FirstOrDefaultAsync(x => x.BranchId == id);
         }
 
         public async Task<List<Branch>> GetNearbyBranches(double lat, double lng)
         {
             double offset = 0.1;
 
-            return await ctx.Branches
+            return await _ctx.Branches
                 .Where(x => x.Latitude >= lat - offset && x.Latitude <= lat + offset &&
                             x.Longitude >= lng - offset && x.Longitude <= lng + offset)
                 .ToListAsync();
@@ -70,28 +73,15 @@ namespace Repository.Repositories
 
         public async Task<Branch> Update(int id, Branch item)
         {
-            var b = await ctx.Branches.FirstOrDefaultAsync(x => x.BranchId == id);
-            if (b == null)
+            var existingBranch = await _ctx.Branches.FirstOrDefaultAsync(a => a.BranchId == id);
+            if (existingBranch == null)
             {
-                throw new Exception("Branches not found");
+                throw new Exception("Branch not found");
             }
-            b.BranchId = id;
-            b.AttractionId = item.AttractionId;
-            b.BranchId = item.BranchId;
-            b.BranchName = item.BranchName;
-            b.Attraction = item.Attraction;
-            b.Duration = item.Duration;
-            b.Latitude = item.Latitude;
-            b.Longitude = item.Longitude;
-            b.AgeGroup = item.AgeGroup;
-            b.Points = item.Points;
-            b.attractionCategory = item.attractionCategory;
-            b.CommentsList = item.CommentsList;
-            b.ImageUrl = item.ImageUrl;
-            b.IsFree = item.IsFree;
-            b.IsWet = item.IsWet;
-            await ctx.Save();
-            return b;
+
+            _mapper.Map(item, existingBranch);
+            await _ctx.Save();
+            return existingBranch;
         }
     }
 }
