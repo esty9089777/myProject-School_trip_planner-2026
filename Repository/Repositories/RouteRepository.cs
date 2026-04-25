@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using myProjectTrips.Interfaces;
 using Repository.Entities;
 using Repository.Interfaces;
@@ -12,33 +13,35 @@ namespace Repository.Repositories
 {
     public class RouteRepository : IRepository<Route>
     {
-        private readonly IContext ctx;
-        public RouteRepository(IContext context)
+        private readonly IContext _ctx;
+        private readonly IMapper _mapper;
+        public RouteRepository(IContext context, IMapper mapper)
         {
-            ctx = context;
+            _ctx = context;
+            _mapper = mapper;
         }
 
         public async Task<Route> Add(Route item)
         {
-            await ctx.Routes.AddAsync(item);
-            await ctx.Save();
+            await _ctx.Routes.AddAsync(item);
+            await _ctx.Save();
             return item;
         }
 
         public async Task Delete(int id)
         {
-            var r = ctx.Routes.FirstOrDefault(x => x.RouteId == id);
+            var r = await _ctx.Routes.FirstOrDefaultAsync(x => x.RouteId == id);
             if (r == null)
             {
                 throw new Exception("Route not found");
             }
-            ctx.Routes.Remove(r);
-            await ctx.Save();
+            _ctx.Routes.Remove(r);
+            await _ctx.Save();
         }
 
         public async Task<List<Route>> GetAll()
         {
-            return await ctx.Routes.ToListAsync();
+            return await _ctx.Routes.ToListAsync();
         }
 
         public async Task<Route> GetByEmail(string email)
@@ -48,32 +51,20 @@ namespace Repository.Repositories
 
         public async Task<Route> GetById(int id)
         {
-            return await ctx.Routes.FirstOrDefaultAsync(x => x.RouteId == id);
+            return await _ctx.Routes.FirstOrDefaultAsync(x => x.RouteId == id);
         }
 
         public async Task<Route> Update(int id, Route item)
         {
-            var r = await ctx.Routes.FirstOrDefaultAsync(x => x.RouteId == id);
-            if (r == null)
+            var existingRoute = await _ctx.Routes.FirstOrDefaultAsync(a => a.RouteId == id);
+            if (existingRoute == null)
             {
                 throw new Exception("Route not found");
             }
-            r.direction = item.direction;
-            r.Description = item.Description;
-            r.Duration = item.Duration;
-            r.ImageUrl = item.ImageUrl;
-            r.IsFree = item.IsFree;
-            r.IsWet = item.IsWet;
-            r.Latitude = item.Latitude;
-            r.Longitude = item.Longitude;
-            r.Points = item.Points;
-            r.routeCategory = item.routeCategory;
-            r.RouteName = item.RouteName;
-            r.AgeGroup = item.AgeGroup;
-            r.CreatorId = item.CreatorId;
-            r.Creator = item.Creator;
-            await ctx.Save();
-            return r;
+
+            _mapper.Map(item, existingRoute);
+            await _ctx.Save();
+            return existingRoute;
         }
     }
 }
