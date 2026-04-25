@@ -10,7 +10,7 @@ namespace Repository.Interfaces
     public interface IBranchRepository:IRepository<Branch>
     {
         Task<List<Branch>> GetBranchesByAttractionId(int AttractionId);
-        Task<Branch> GetNearbyBranches(double lat, double lng);
+        Task<List<Branch>> GetNearbyBranches(double lat, double lng);
 
     }
 }

@@ -10,47 +10,27 @@ namespace Service.Services
 {
     public class AvailabilityService : IAvailabilityService
     {
-        public AvailabilityDto AddAvailability(AvailabilityDto dto)
+        public Task<AvailabilityDto> GetAvailabilityByAttractionId(int attractionId)
         {
             throw new NotImplementedException();
         }
 
-        public void DeleteAvailability(int id)
+        public Task<AvailabilityDto> GetAvailabilityByBranchId(int branchId)
         {
             throw new NotImplementedException();
         }
 
-        public AvailabilityDto GetAvailabilityByAttractionId(int attractionId)
+        public Task<AvailabilityDto> GetAvailabilityByRouteId(int routeId)
         {
             throw new NotImplementedException();
         }
 
-        public AvailabilityDto GetAvailabilityByBranchId(int branchId)
+        public Task<AvailabilityDto> IsBranchAvailable(int branchId, DayOfWeek day, TimeOnly time)
         {
             throw new NotImplementedException();
         }
 
-        public AvailabilityDto GetAvailabilityById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public AvailabilityDto GetAvailabilityByRouteId(int routeId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public AvailabilityDto IsBranchAvailable(int branchId, DayOfWeek day, TimeOnly time)
-        {
-            throw new NotImplementedException();
-        }
-
-        public AvailabilityDto IsRouteAvailable(int routeId, DayOfWeek day, TimeOnly time)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void UpdateAvailability(int id, AvailabilityDto dto)
+        public Task<AvailabilityDto> IsRouteAvailable(int routeId, DayOfWeek day, TimeOnly time)
         {
             throw new NotImplementedException();
         }

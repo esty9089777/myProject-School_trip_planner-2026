@@ -69,7 +69,7 @@ namespace Service.Services
 
         public async UserDto Login(LoginDto login)
         {
-            var user = await _repository.GetByUsername(login.Email);
+            var user = await _repository.GetByEmail(login.Email);
             if (user == null)
                 throw new Exception("User not found");
 

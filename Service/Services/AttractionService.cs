@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Service.Services
 {
-    public class AttractionService : IAttractionService
+    public class AttractionService : IService<Attraction>
     {
         private readonly IRepository<Attraction> _repository;
         private readonly IMapper _mapper;
@@ -45,41 +45,6 @@ namespace Service.Services
         public async Task Delete(int id)
         {
             await _repository.Delete(id);
-        }
-
-        public Task<AttractionDto> AddAttraction(AttractionDto attractionDto)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void DeleteAttraction(int attractionId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public AttractionDto GetAttractionById(int attractionId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void UpdateAttraction(int attractionId, AttractionDto attractionDto)
-        {
-            throw new NotImplementedException();
-        }
-
-        AttractionDto IAttractionService.AddAttraction(AttractionDto attractionDto)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task IAttractionService.UpdateAttraction(int attractionId, AttractionDto attractionDto)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task IAttractionService.DeleteAttraction(int attractionId)
-        {
-            throw new NotImplementedException();
         }
     }
 }
