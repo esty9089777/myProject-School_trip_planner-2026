@@ -11,6 +11,5 @@ namespace Repository.Interfaces
     {
         Task<List<Comment>> GetCommentByBranchId(int branchId);
         Task<List<Comment>> GetCommentByRouteId(int routeId);
-        Task<List<Comment>> GetCommentsByUserId(int userId);
     }
 }

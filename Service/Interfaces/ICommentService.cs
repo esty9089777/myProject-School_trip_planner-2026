@@ -12,6 +12,5 @@ namespace Service.Interfaces
     {
         Task<List<CommentDto>> GetCommentByBranchId(int branchId);
         Task<List<CommentDto>> GetCommentByRouteId(int routeId);
-        Task<List<CommentDto>> GetCommentsByUserId(int userId);
     }
 }

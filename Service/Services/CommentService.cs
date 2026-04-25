@@ -68,11 +68,6 @@ namespace Service.Services
             throw new NotImplementedException();
         }
 
-        public List<CommentDto> GetCommentsByUserId(int userId)
-        {
-            throw new NotImplementedException();
-        }
-
         public void DeleteComment(int commentId)
         {
             throw new NotImplementedException();
