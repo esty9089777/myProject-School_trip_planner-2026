@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using myProjectTrips.Interfaces;
 using Repository.Entities;
 using Repository.Interfaces;
@@ -12,52 +13,52 @@ namespace Repository.Repositories
 {
     public class AttractionRepository : IRepository<Attraction>
     {
-        private readonly IContext ctx;
-
-        public AttractionRepository(IContext ctx)
+        private readonly IContext _ctx;
+        private readonly IMapper _mapper;
+        public AttractionRepository(IContext ctx, IMapper mapper)
         {
-            this.ctx = ctx;
+            _ctx = ctx;
+            _mapper = mapper;
         }
         public async Task<Attraction> Add(Attraction item)
         {
-            await ctx.Attractions.AddAsync(item);
-            await ctx.Save();
+            await _ctx.Attractions.AddAsync(item);
+            await _ctx.Save();
             return item;
         }
 
         public async Task Delete(int id)
         {
-            var a = ctx.Attractions.FirstOrDefault(x=>x.AttractionId == id);
+            var a = await _ctx.Attractions.FirstOrDefaultAsync(x => x.AttractionId == id);
             if(a == null)
             {
                 throw new Exception("Attraction not found");
             }
-            ctx.Attractions.Remove(a);
-            await ctx.Save();
+            _ctx.Attractions.Remove(a);
+            await _ctx.Save();
         }
 
         public async Task<List<Attraction>> GetAll()
         {
-            return await ctx.Attractions.ToListAsync();
+            return await _ctx.Attractions.ToListAsync();
         }
 
         public async Task<Attraction> GetById(int id)
         {
-            return await ctx.Attractions.FirstOrDefaultAsync(x => x.AttractionId == id);
+            return await _ctx.Attractions.FirstOrDefaultAsync(x => x.AttractionId == id);
         }
 
         public async Task<Attraction> Update(int id, Attraction item)
         {
-            var a = await ctx.Attractions.FirstOrDefaultAsync(x => x.AttractionId == id);
-            a.AttraName = item.AttraName;
-            a.Branches = item.Branches;
-            a.AttractionId = id;
-            a.Creator = item.Creator;
-            a.CreatorId = item.CreatorId;
-            a.Description = item.Description;
-            a.ImageUrl = item.ImageUrl;
-            await ctx.Save();
-            return a;
+            var existingAttraction = await _ctx.Attractions.FirstOrDefaultAsync(a => a.AttractionId == id);
+            if (existingAttraction == null)
+            {
+                throw new Exception("Attraction not found");
+            }
+
+            _mapper.Map(item, existingAttraction);
+            await _ctx.Save();
+            return existingAttraction;
         }
     }
 }
