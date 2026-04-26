@@ -4,8 +4,8 @@ using Repository.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Repository.Entities;
-using System.Text;
 using AutoMapper;
+using System.Text;
 using Service.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,9 +24,9 @@ var connection = builder.Configuration.GetConnectionString("databasa-myComputer"
 builder.Services.AddDbContext<TripContext>(option => option.UseSqlServer(connection));
 builder.Services.AddScoped<IContext>(provider => provider.GetRequiredService<TripContext>());
 
-builder.Services.AddAutoMapper(typeof(MapperProfile));
 builder.Services.AddServices();
 builder.Services.AddOpenApi();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
