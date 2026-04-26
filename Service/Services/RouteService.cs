@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Service.Services
 {
-    public class RouteService : IRouteService
+    public class RouteService : IService<Route>
     {
         private readonly IRepository<Route> _repository;
         private readonly IMapper _mapper;

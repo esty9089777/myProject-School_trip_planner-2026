@@ -10,7 +10,6 @@ namespace Service.Interfaces
 {
     public interface ITripService:IService<Trip>
     {
-        Task<TripDto> CreateTrip(TripDto tripDto);
         Task<List<TripDto>> GetTripsByUserId(int userId);
     }
 }

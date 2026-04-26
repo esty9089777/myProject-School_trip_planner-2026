@@ -34,11 +34,6 @@ namespace Service.Services
         {
         }
 
-        public TripDto CreateTrip(TripDto tripDto)
-        {
-            // יצירת נסיעה חדשה
-        }
-
         public TripDto GetTripById(int tripId)
         {
             // שליפת נסיעה לפי ID

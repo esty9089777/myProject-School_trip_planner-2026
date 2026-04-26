@@ -1,6 +1,7 @@
 ﻿//using Common.Dto;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection;
+using Repository.Interfaces;
+using Repository.Repositories;
 using Service.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -14,8 +15,13 @@ namespace Service.Services
     {
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
-            //Services.AddRepository();
-            //services.AddScoped<IService<>, TripService>();
+            services.AddScoped<ITripRepository, TripRepository>();
+
+            services.AddScoped<ITripService, TripService>();
+
+            // אם יש לך שירות משתמשים:
+            // services.AddScoped<IUserService, UserService>();
+
             return services;
         }
     }
