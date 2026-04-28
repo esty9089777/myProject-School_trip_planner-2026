@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Repository.Repositories
 {
-    internal class BranchRepository : IBranchRepository
+    public class BranchRepository : IBranchRepository
     {
         private readonly IContext _ctx;
         private readonly IMapper _mapper;
