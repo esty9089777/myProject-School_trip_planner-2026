@@ -44,24 +44,37 @@ namespace Service.Services
             return _mapper.Map<RouteDto>(addedRoute);
         }
 
-        public Task Delete(int id)
+        public async Task Delete(int id)
         {
-            throw new NotImplementedException();
+            var route = await _repository.GetById(id);
+            if (route == null)
+            {
+                throw new Exception("Route not found");
+            }
+            await _repository.Delete(id);
         }
 
-        public Task<List<RouteDto>> GetAll()
+        public async Task<List<RouteDto>> GetAll()
         {
-            throw new NotImplementedException();
+            var routes = await _repository.GetAll();
+            return _mapper.Map<List<RouteDto>>(routes);
         }
 
-        public Task<RouteDto> GetById(int id)
+        public async Task<RouteDto> GetById(int id)
         {
-            throw new NotImplementedException();
+            var route = await _repository.GetById(id);
+            if (route == null)
+            {
+                throw new Exception("Route not found");
+            }
+            return _mapper.Map<RouteDto>(route);
         }
 
-        public Task<RouteDto> Update(int id, RouteDto item)
+        public async Task<RouteDto> Update(int id, RouteDto item)
         {
-            throw new NotImplementedException();
+            var entity = _mapper.Map<Route>(item);
+            var updatedRoute = await _repository.Update(id, entity);
+            return _mapper.Map<RouteDto>(updatedRoute);
         }
     }
 }
