@@ -10,6 +10,6 @@ namespace Service.Interfaces
     public interface IBranchService : IService<BranchDto>
     {
         Task<List<BranchDto>> GetBranchesByAttractionId(int AttractionId);
-        Task<BranchDto> GetNearbyBranches(double lat, double lng);
+        Task<List<BranchDto>> GetNearbyBranches(double lat, double lng);
     }
 }
