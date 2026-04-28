@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Service.Interfaces
 {
-    public interface ICommentService:IService<Comment>
+    public interface ICommentService:IService<CommentDto>
     {
         Task<List<CommentDto>> GetCommentByBranchId(int branchId);
         Task<List<CommentDto>> GetCommentByRouteId(int routeId);

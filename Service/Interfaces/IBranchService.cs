@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Service.Interfaces
 {
-    public interface IBranchService
+    public interface IBranchService : IService<BranchDto>
     {
         Task<List<BranchDto>> GetBranchesByAttractionId(int AttractionId);
         Task<BranchDto> GetNearbyBranches(double lat, double lng);

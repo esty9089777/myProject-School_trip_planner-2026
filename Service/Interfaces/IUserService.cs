@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Service.Interfaces
 {
-    public interface IUserService: IService<User>
+    public interface IUserService: IService<UserDto>
     {
         Task<UserDto> Login(LoginDto login);
         Task ChangePassword(int userId, ChangePasswordDto changePasswordDto);

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Service.Interfaces
 {
-    public interface IAvailabilityService
+    public interface IAvailabilityService : IService<AvailabilityDto>
     {
         Task<AvailabilityDto> GetAvailabilityByBranchId(int branchId);
         Task<AvailabilityDto> GetAvailabilityByAttractionId(int attractionId);
