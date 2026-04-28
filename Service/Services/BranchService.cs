@@ -15,60 +15,74 @@ namespace Service.Services
     {
         private readonly IRepository<Branch> _repository;
         private readonly IMapper _mapper;
+        private readonly IService<Attraction> _attractionService;
 
-        public BranchService(IRepository<Branch> repository, IMapper mapper)
+        public BranchService(IRepository<Branch> repository, IMapper mapper, IService<Attraction> attractionService)
         {
             _repository = repository;
             _mapper = mapper;
+            _attractionService = attractionService;
         }
-        public BranchDto AddBranch(BranchDto dto)
+
+        public async Task<BranchDto> Add(BranchDto item)
+        {
+            var attraction = await _attractionService.GetById(item.AttractionId);
+            if (attraction == null)
+            {
+                throw new Exception("Attraction not found");
+            }
+            var branch = _mapper.Map<Branch>(item);
+            var addedBranch = await _repository.Add(branch);
+
+            return _mapper.Map<BranchDto>(addedBranch);
+        }
+
+        public async Task Delete(int id)
+        {
+            var branch = await _repository.GetById(id);
+            if (branch == null)
+            {
+                throw new Exception("Branch not found");
+            }
+            await _repository.Delete(id);
+        }
+
+        public async Task<List<BranchDto>> GetAll()
+        {
+            var branches = await _repository.GetAll();
+            return _mapper.Map<List<BranchDto>>(branches);
+        }
+
+        public Task<List<BranchDto>> GetBranchesByAttractionId(int AttractionId)
         {
             throw new NotImplementedException();
         }
 
-        public BranchDto AddBranch(int AttractionId, BranchDto dto)
+        public async Task<BranchDto> GetById(int id)
+        {
+            var branch = await _repository.GetById(id);
+            if (branch == null)
+            {
+                throw new Exception("Branch not found");
+            }
+            return _mapper.Map<BranchDto>(branch);
+        }
+
+        public Task<BranchDto> GetNearbyBranches(double lat, double lng)
         {
             throw new NotImplementedException();
         }
 
-        public void DeleteBranch(int id)
+        public async Task<BranchDto> Update(int id, BranchDto item)
         {
-            throw new NotImplementedException();
-        }
-
-        public BranchDto FilterBranches(BranchFilterDto filter)
-        {
-            throw new NotImplementedException();
-        }
-
-        public BranchDto GetAllBranches()
-        {
-            throw new NotImplementedException();
-        }
-
-        public BranchDto GetBranchById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<BranchDto> GetBranchesByAttractionId(int AttractionId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public BranchDto GetNearbyBranches(double lat, double lng)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void UpdateBranch(int id, BranchDto dto)
-        {
-            throw new NotImplementedException();
-        }
-
-        List<BranchDto> IBranchService.GetAllBranches()
-        {
-            throw new NotImplementedException();
+            var branch = await _repository.GetById(id);
+            if (branch == null)
+            {
+                throw new Exception("Branch not found");
+            }
+            _mapper.Map(item, branch);
+            var updatedBranch = await _repository.Update(branch.BranchId, branch);
+            return _mapper.Map<BranchDto>(updatedBranch);
         }
     }
 }
