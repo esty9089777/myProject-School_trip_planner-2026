@@ -1,5 +1,6 @@
-﻿//using Common.Dto;
+﻿using Common.Dto;
 using Microsoft.Extensions.DependencyInjection;
+using Repository.Entities;
 using Repository.Interfaces;
 using Repository.Repositories;
 using Service.Interfaces;
@@ -16,11 +17,20 @@ namespace Service.Services
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddScoped<ITripRepository, TripRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IRepository<Route>, RouteRepository>();
+            services.AddScoped<IRepository<Attraction>, AttractionRepository>();
+            services.AddScoped<IAvailabilityRepository, AvailabilityRepository>();
+            services.AddScoped<IBranchRepository, BranchRepository>();
+            services.AddScoped<ICommentRepository, CommentRepository>();
 
             services.AddScoped<ITripService, TripService>();
-
-            // אם יש לך שירות משתמשים:
-            // services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IService<RouteDto>, RouteService>();
+            services.AddScoped<IService<AttractionDto>, AttractionService>();
+            services.AddScoped<IAvailabilityService, AvailabilityService>();
+            services.AddScoped<IBranchService, BranchService>();
+            services.AddScoped<ICommentService, CommentService>();
 
             return services;
         }
