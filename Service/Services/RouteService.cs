@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Service.Services
 {
-    public class RouteService : IService<Route>
+    public class RouteService : IService<RouteDto>
     {
         private readonly IRepository<Route> _repository;
         private readonly IMapper _mapper;
@@ -25,7 +25,7 @@ namespace Service.Services
             _userService = userService;
         }
 
-        public async Task<RouteDto> Add(Route item)
+        public async Task<RouteDto> Add(RouteDto item)
         {
             var user = await _userService.GetById(item.CreatorId);
             if (user == null)
@@ -44,42 +44,22 @@ namespace Service.Services
             return _mapper.Map<RouteDto>(addedRoute);
         }
 
-        public void AddRoute(RouteDto routeDto)
-        {
-            throw new NotImplementedException();
-        }
-
         public Task Delete(int id)
         {
             throw new NotImplementedException();
         }
 
-        public void DeleteRoute(int routeId)
+        public Task<List<RouteDto>> GetAll()
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<Route>> GetAll()
+        public Task<RouteDto> GetById(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Route> GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public RouteDto GetRouteById(int routeId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Route> Update(int id, Route item)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void UpdateRoute(int routeId, RouteDto routeDto)
+        public Task<RouteDto> Update(int id, RouteDto item)
         {
             throw new NotImplementedException();
         }
