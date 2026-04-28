@@ -22,26 +22,21 @@ namespace Service.Services
             _mapper = mapper;
         }
 
-        public void Add(Trip item)
+        public async Task<TripDto> Add(TripDto item)
         {
+            var entity = _mapper.Map<Trip>(item);
+            var addedEntity = await _repository.Add(entity);
+            return _mapper.Map<TripDto>(addedEntity);
         }
 
-        public void Update(Trip item)
+        public async Task Delete(int id)
         {
-        }
-
-        public void Delete(int id)
-        {
-        }
-
-        public TripDto GetTripById(int tripId)
-        {
-            // שליפת נסיעה לפי ID
-        }
-
-        public async Task<List<TripDto>> GetTripsByUserId(int userId)
-        {
-            
+            var trip = await _repository.GetById(id);
+            if (trip == null)
+            {
+                throw new KeyNotFoundException($"Trip with id {id} not found.");
+            }
+            await _repository.Delete(id);
         }
 
         public async Task<List<TripDto>> GetAll()
@@ -54,38 +49,26 @@ namespace Service.Services
         public async Task<TripDto> GetById(int id)
         {
             var trip = await _repository.GetById(id);
+            if (trip == null)
+            {
+                throw new KeyNotFoundException($"Trip with id {id} not found.");
+            }
             var tripDto = _mapper.Map<TripDto>(trip);
             return tripDto;
         }
 
-        List<TripDto> ITripService.GetTripsByUserId(int userId)
+        public async Task<List<TripDto>> GetTripsByUserId(int userId)
         {
-            throw new NotImplementedException();
+            var trips = await _repository.GetAll();
+            var userTrips = trips.Where(t => t.UserId == userId).ToList();
+            return _mapper.Map<List<TripDto>>(userTrips);
         }
 
-        Task<List<Trip>> IService<Trip>.GetAll()
+        public async Task<TripDto> Update(int id, TripDto item)
         {
-            throw new NotImplementedException();
-        }
-
-        Task<Trip> IService<Trip>.GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<Trip> IService<Trip>.Add(Trip item)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Trip> Update(int id, Trip item)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task IService<Trip>.Delete(int id)
-        {
-            throw new NotImplementedException();
+            var entity = _mapper.Map<Trip>(item);
+            var updatedTrip = await _repository.Update(id, entity);
+            return _mapper.Map<TripDto>(updatedTrip);
         }
     }
 }
