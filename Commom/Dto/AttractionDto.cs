@@ -14,5 +14,6 @@ namespace Common.Dto
         public string Description { get; set; }
         public string ImageUrl { get; set; }
         public List<BranchDto> Branches { get; set; }
+        public int CreatorId { get; set; }
     }
 }
