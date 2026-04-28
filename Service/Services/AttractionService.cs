@@ -2,6 +2,7 @@
 using Common.Dto;
 using Repository.Entities;
 using Repository.Interfaces;
+using Repository.Repositories;
 using Service.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -16,12 +17,14 @@ namespace Service.Services
         private readonly IRepository<Attraction> _repository;
         private readonly IMapper _mapper;
         private readonly IRepository<Branch> _branchRepository;
+        private readonly IUserService _userService;
 
-        public AttractionService(IRepository<Attraction> repository, IMapper mapper, IRepository<Branch> branchRepository)
+        public AttractionService(IRepository<Attraction> repository, IMapper mapper, IRepository<Branch> branchRepository, IUserService userService)
         {
             _repository = repository;
             _mapper = mapper;
             _branchRepository = branchRepository;
+            _userService = userService;
         }
 
         public async Task<List<AttractionDto>> GetAll()
@@ -38,6 +41,11 @@ namespace Service.Services
 
         public async Task<AttractionDto> Add(AttractionDto item)
         {
+            var user = await _userService.GetById(item.CreatorId);
+            if (user == null || user.Role == "User")
+            {
+                throw new UnauthorizedAccessException("Unauthorized to add attractions or branches");
+            }
             var existingAttraction = await _repository.GetById(item.AttractionId);
 
             if (existingAttraction == null)
@@ -46,7 +54,7 @@ namespace Service.Services
                 var addedEntity = await _repository.Add(entity);
                 return _mapper.Map<AttractionDto>(addedEntity);
             }
-            else
+            if (item.Branches != null && item.Branches.Any())
             {
                 var branches = _mapper.Map<List<Branch>>(item.Branches);
                 foreach (var branch in branches)
@@ -54,8 +62,8 @@ namespace Service.Services
                     branch.AttractionId = existingAttraction.AttractionId;
                     await _branchRepository.Add(branch);
                 }
-                return _mapper.Map<AttractionDto>(existingAttraction);
             }
+            return _mapper.Map<AttractionDto>(existingAttraction);
         }
 
         public async Task<AttractionDto> Update(int id, AttractionDto item)
