@@ -22,18 +22,6 @@ namespace Service.Services
             _mapper = mapper;
         }
 
-        //public async Task<UserDto> Register(RegisterDto register)
-        //{
-        //    var user = await _repository.GetByUsername(register.UserName);
-        //    if (user != null)
-        //    {
-        //        throw new Exception("User already exists");
-        //    }
-        //    var userEntity = _mapper.Map<User>(register);
-        //    var addedUser = await _repository.Add(userEntity);
-
-        //    return _mapper.Map<UserDto>(addedUser);
-        //}
 
 
         //public async Task AddAttraction(UserDto userDto, AttractionDto dto)
@@ -76,9 +64,17 @@ namespace Service.Services
         //    await _repository.RemoveAttraction(attraction, userId);
         //}
 
-        public Task<UserDto> Add(UserDto item)
+        public async Task<UserDto> Add(UserDto item)
         {
-            throw new NotImplementedException();
+            var user = await _repository.GetByEmail(item.UserEmail);
+            if (user != null)
+            {
+                throw new Exception("User already exists");
+            }
+            var userEntity = _mapper.Map<User>(item);
+            var addedUser = await _repository.Add(userEntity);
+
+            return _mapper.Map<UserDto>(addedUser);
         }
 
         public Task AddAttraction(int userId, AttractionDto branchDto)
@@ -114,19 +110,30 @@ namespace Service.Services
             await _repository.Update(user.UserId, user);
         }
 
-        public Task Delete(int id)
+        public async Task Delete(int id)
         {
-            throw new NotImplementedException();
+            var user = await _repository.GetById(id);
+            if (user == null)
+            {
+                throw new KeyNotFoundException($"User with id {id} not found.");
+            }
+            await _repository.Delete(id);
         }
 
-        public Task<List<UserDto>> GetAll()
+        public async Task<List<UserDto>> GetAll()
         {
-            throw new NotImplementedException();
+            var users = await _repository.GetAll();
+            return _mapper.Map<List<UserDto>>(users);
         }
 
-        public Task<UserDto> GetById(int id)
+        public async Task<UserDto> GetById(int id)
         {
-            throw new NotImplementedException();
+            var user = await _repository.GetById(id);
+            if (user == null)
+            {
+                throw new Exception($"User with id {id} not found");
+            }
+            return _mapper.Map<UserDto>(user);
         }
 
         public Task<TripDto> GetTrip(int userId, int tripId)
