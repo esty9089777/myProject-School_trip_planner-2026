@@ -54,32 +54,6 @@ namespace Repository.Repositories
             await _ctx.Save();
         }
 
-        public async Task AddRoute(int userId, int routeId)
-        {
-            var user = await _ctx.Users.FirstOrDefaultAsync(u => u.UserId == userId);
-
-            if (user == null)
-            {
-                throw new Exception("User not found");
-            }
-
-            if (user.UserRole == UserRoleEnum.User)
-            {
-                throw new Exception("Only Business Owners and Admin can add attractions");
-            }
-
-            var route = await _ctx.Routes.FirstOrDefaultAsync(r => r.RouteId == routeId);
-
-            if (route == null)
-            {
-                throw new Exception("Route not found");
-            }
-
-            route.CreatorId = userId;
-
-            await _ctx.Save();
-        }
-
         public async Task ChangePassword(int userId, string newPassword)
         {
             var user = await _ctx.Users.FirstOrDefaultAsync(u => u.UserId == userId);
@@ -130,30 +104,6 @@ namespace Repository.Repositories
         public async Task<User> Login(string email)
         {
             return await _ctx.Users.FirstOrDefaultAsync(u => u.UserEmail == email);
-        }
-
-        public async Task RemoveAttraction(int userId, int attractionId)
-        {
-            var a = await _ctx.Attractions.FirstOrDefaultAsync
-                (x => x.AttractionId == attractionId && x.CreatorId == userId);
-            if (a == null)
-            {
-                throw new Exception("Attraction not found");
-            }
-            _ctx.Attractions.Remove(a);
-            await _ctx.Save();
-        }
-
-        public async Task RemoveRoute(int userId, int routeId)
-        {
-            var r = await _ctx.Routes.FirstOrDefaultAsync
-                (x => x.RouteId == routeId && x.CreatorId == userId);
-            if (r == null)
-            {
-                throw new Exception("Route not found");
-            }
-            _ctx.Routes.Remove(r);
-            await _ctx.Save();
         }
 
         public async Task ResetPassword(string email)
