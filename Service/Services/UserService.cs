@@ -22,48 +22,6 @@ namespace Service.Services
             _mapper = mapper;
         }
 
-
-
-        //public async Task AddAttraction(UserDto userDto, AttractionDto dto)
-        //{
-        //    if (userDto == null)
-        //    {
-        //        throw new Exception("User not found");
-        //    }
-        //    var attraction = _mapper.Map<Attraction>(dto);
-        //    var existingAttraction = await _repository.GetAttractionById(attraction.AttractionId);
-        //    var user = _mapper.Map<User>(userDto);
-
-        //    if (existingAttraction == null)
-        //    {
-        //        await _repository.AddAttraction(attraction, user);
-        //    }
-        //    var branch = new Branch
-        //    {
-        //        BranchName = attraction.AttraName,
-
-        //    };
-        //    await _repository.AddBranch(branch);
-        //}
-        //public void AddRoute(int userId, RouteDto routeDto)
-        //{
-        //    throw new NotImplementedException();
-        //}
-        //public async Task RemoveAttraction(int userId, int attractionId)
-        //{
-        //    Attraction attraction = await _repository.GetAttractionById(attractionId);
-
-        //    if (attraction == null)
-        //    {
-        //        throw new Exception("Attraction not found");
-        //    }
-        //    if (userId != attraction.CreatorId)
-        //    {
-        //        throw new Exception("User is not the creator of the attraction");
-        //    }
-        //    await _repository.RemoveAttraction(attraction, userId);
-        //}
-
         public async Task<UserDto> Add(UserDto item)
         {
             var user = await _repository.GetByEmail(item.UserEmail);
@@ -75,16 +33,6 @@ namespace Service.Services
             var addedUser = await _repository.Add(userEntity);
 
             return _mapper.Map<UserDto>(addedUser);
-        }
-
-        public Task AddAttraction(int userId, AttractionDto branchDto)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task AddRoute(int userId, RouteDto routeDto)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task ChangePassword(int userId, ChangePasswordDto changePasswordDto)
@@ -156,16 +104,6 @@ namespace Service.Services
                 throw new Exception("Wrong password");
 
             return _mapper.Map<UserDto>(user);
-        }
-
-        public Task RemoveAttraction(int userId, int attractionId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task RemoveRoute(int userId, int routeId)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task ResetPassword(string email)
