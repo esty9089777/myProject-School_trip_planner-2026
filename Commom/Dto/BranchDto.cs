@@ -4,7 +4,7 @@ namespace Common.Dto
     public class BranchDto
     {
         public int BranchId { get; set; }
-        public string AttractionId { get; set; }
+        public int AttractionId { get; set; }
         public string BranchName { get; set; }
         public bool IsFree { get; set; }
         public bool IsWet { get; set; }
