@@ -15,11 +15,13 @@ namespace Service.Services
     {
         private readonly IRepository<User> _repository;
         private readonly IMapper _mapper;
+        private readonly ITripService _tripService;
 
-        public UserService(IRepository<User> repository, IMapper mapper)
+        public UserService(IRepository<User> repository, IMapper mapper, ITripService tripService)
         {
             _repository = repository;
             _mapper = mapper;
+            _tripService = tripService;
         }
 
         public async Task<UserDto> Add(UserDto item)
@@ -84,14 +86,36 @@ namespace Service.Services
             return _mapper.Map<UserDto>(user);
         }
 
-        public Task<TripDto> GetTrip(int userId, int tripId)
+        public async Task<TripDto> GetTrip(int userId, int tripId)
         {
-            throw new NotImplementedException();
+            var user = await _repository.GetById(userId);
+            if (user == null)
+            {
+                throw new Exception($"User with id {userId} not found");
+            }
+
+            var trip = await _tripService.GetById(tripId);
+            if (trip == null || trip.UserEmail != user.UserEmail)
+            {
+                throw new Exception($"Trip with id {tripId} not found for user with id {userId}");
+            }
+
+            return trip;
         }
 
-        public Task<List<TripDto>> GetUserTrips(int userId)
+        public async Task<List<TripDto>> GetUserTrips(int userId)
         {
-            throw new NotImplementedException();
+            var user = await _repository.GetById(userId);
+            if (user == null)
+            {
+                throw new Exception($"User with id {userId} not found");
+            }
+
+            var allTrips = await _tripService.GetAll();
+
+            var filteredTrips = allTrips.Where(t => t.UserEmail == user.UserEmail).ToList();
+
+            return filteredTrips;
         }
 
         public async Task<UserDto> Login(LoginDto login)
