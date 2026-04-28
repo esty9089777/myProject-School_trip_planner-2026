@@ -43,6 +43,11 @@ namespace Repository.Repositories
             return await _ctx.Attractions.ToListAsync();
         }
 
+        public Task<Attraction> GetByEmail(string email)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<Attraction> GetById(int id)
         {
             return await _ctx.Attractions.FirstOrDefaultAsync(x => x.AttractionId == id);
