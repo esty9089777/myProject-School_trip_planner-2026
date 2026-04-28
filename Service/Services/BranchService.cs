@@ -13,11 +13,11 @@ namespace Service.Services
 {
     public class BranchService : IBranchService
     {
-        private readonly IRepository<Branch> _repository;
+        private readonly IBranchRepository _repository;
         private readonly IMapper _mapper;
         private readonly IService<Attraction> _attractionService;
 
-        public BranchService(IRepository<Branch> repository, IMapper mapper, IService<Attraction> attractionService)
+        public BranchService(IBranchRepository repository, IMapper mapper, IService<Attraction> attractionService)
         {
             _repository = repository;
             _mapper = mapper;
@@ -53,9 +53,11 @@ namespace Service.Services
             return _mapper.Map<List<BranchDto>>(branches);
         }
 
-        public Task<List<BranchDto>> GetBranchesByAttractionId(int AttractionId)
+        public async Task<List<BranchDto>> GetBranchesByAttractionId(int AttractionId)
         {
-            throw new NotImplementedException();
+            var branches = await _repository.GetAll();
+            var filteredBranches = branches.Where(b => b.AttractionId == AttractionId).ToList();
+            return _mapper.Map<List<BranchDto>>(filteredBranches);
         }
 
         public async Task<BranchDto> GetById(int id)
@@ -68,9 +70,16 @@ namespace Service.Services
             return _mapper.Map<BranchDto>(branch);
         }
 
-        public Task<BranchDto> GetNearbyBranches(double lat, double lng)
+        public async Task<List<BranchDto>> GetNearbyBranches(double lat, double lng)
         {
-            throw new NotImplementedException();
+            var branches = await _repository.GetNearbyBranches(lat, lng);
+
+            var sortedBranches = branches
+                .OrderBy(b => Math.Pow(b.Latitude - lat, 2) + Math.Pow(b.Longitude - lng, 2))
+                .Take(5) 
+                .ToList();
+
+            return _mapper.Map<List<BranchDto>>(sortedBranches);
         }
 
         public async Task<BranchDto> Update(int id, BranchDto item)
