@@ -140,7 +140,7 @@ namespace Service.Services
             var availability = await _repository.GetById(id);
             if (availability == null)
             {
-                throw new Exception("Availability not found");
+                throw new KeyNotFoundException($"Availability with id {id} not found.");
             }
             _mapper.Map(item, availability);
             var updatedAvailability = await _repository.Update(availability.AvailabilityId, availability);

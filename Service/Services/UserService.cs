@@ -148,9 +148,9 @@ namespace Service.Services
             {
                 throw new KeyNotFoundException($"User with id {id} not found.");
             }
-            var userToUpdate = _mapper.Map<User>(item);
-            userToUpdate.UserId = id; 
-            var updatedUser = await _repository.Update(id, userToUpdate);
+            _mapper.Map(item, existingUser);
+            existingUser.UserId = id; 
+            var updatedUser = await _repository.Update(id, existingUser);
             return _mapper.Map<UserDto>(updatedUser);
         }
     }

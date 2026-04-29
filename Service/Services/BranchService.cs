@@ -87,7 +87,7 @@ namespace Service.Services
             var branch = await _repository.GetById(id);
             if (branch == null)
             {
-                throw new Exception("Branch not found");
+                throw new KeyNotFoundException($"Branch with id {id} not found.");
             }
             _mapper.Map(item, branch);
             var updatedBranch = await _repository.Update(branch.BranchId, branch);

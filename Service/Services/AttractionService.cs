@@ -68,8 +68,13 @@ namespace Service.Services
 
         public async Task<AttractionDto> Update(int id, AttractionDto item)
         {
-            var entity = _mapper.Map<Attraction>(item);
-            var updatedAttraction = await _repository.Update(id, entity);
+            var attraction = await _repository.GetById(id);
+            if (attraction == null)
+            {
+                throw new KeyNotFoundException($"Attraction with id {id} not found.");
+            }
+            _mapper.Map(item, attraction);
+            var updatedAttraction = await _repository.Update(attraction.AttractionId, attraction);
             return _mapper.Map<AttractionDto>(updatedAttraction);
         }
 
