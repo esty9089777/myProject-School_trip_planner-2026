@@ -49,8 +49,11 @@ namespace Service.Services
         public async Task<CommentDto> GetById(int id)
         {
             var comment = await _repository.GetById(id);
-            var commentDto = _mapper.Map<CommentDto>(comment);
-            return commentDto;
+            if (comment == null)
+            {
+                throw new KeyNotFoundException($"Comment with id {id} not found.");
+            }
+            return _mapper.Map<CommentDto>(comment);
         }
 
         public async Task<List<CommentDto>> GetCommentByBranchId(int branchId)
