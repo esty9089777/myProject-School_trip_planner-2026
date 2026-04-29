@@ -9,9 +9,9 @@ namespace Service.Interfaces
 {
     public interface IAvailabilityService : IService<AvailabilityDto>
     {
-        Task<AvailabilityDto> GetAvailabilityByBranchId(int branchId);
-        Task<AvailabilityDto> GetAvailabilityByAttractionId(int attractionId);
-        Task<AvailabilityDto> GetAvailabilityByRouteId(int routeId);
+        Task<List<AvailabilityDto>> GetAvailabilityByBranchId(int branchId);
+        Task<List<AvailabilityDto>> GetAvailabilityByAttractionId(int attractionId);
+        Task<List<AvailabilityDto>> GetAvailabilityByRouteId(int routeId);
         Task<AvailabilityDto> IsBranchAvailable(int branchId, DayOfWeek day, TimeOnly time);
         Task<AvailabilityDto> IsRouteAvailable(int routeId, DayOfWeek day, TimeOnly time);
     }
