@@ -53,14 +53,18 @@ namespace Service.Services
             return commentDto;
         }
 
-        public Task<List<CommentDto>> GetCommentByBranchId(int branchId)
+        public async Task<List<CommentDto>> GetCommentByBranchId(int branchId)
         {
-            throw new NotImplementedException();
+            var comments = await _repository.GetAll();
+            var branchComments = comments.Where(c => c.BranchId == branchId);  
+            return _mapper.Map<List<CommentDto>>(branchComments);
         }
 
-        public Task<List<CommentDto>> GetCommentByRouteId(int routeId)
+        public async Task<List<CommentDto>> GetCommentByRouteId(int routeId)
         {
-            throw new NotImplementedException();
+            var comments = await _repository.GetAll();
+            var routeComments = comments.Where(c => c.RouteId == routeId);
+            return _mapper.Map<List<CommentDto>>(routeComments);
         }
 
         public async Task<CommentDto> Update(int id, CommentDto item)
