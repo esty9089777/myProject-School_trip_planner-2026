@@ -22,6 +22,23 @@ namespace Service.Services
             _mapper = mapper;
         }
 
+        public async Task<CommentDto> Add(CommentDto item)
+        {
+            var entity = _mapper.Map<Comment>(item);
+            var addedEntity = await _repository.Add(entity);
+            return _mapper.Map<CommentDto>(addedEntity);
+        }
+
+        public async Task Delete(int id)
+        {
+            var comment = await _repository.GetById(id);
+            if (comment == null)
+            {
+                throw new KeyNotFoundException($"Comment with id {id} not found.");
+            }
+            await _repository.Delete(id);
+        }
+
         public async Task<List<CommentDto>> GetAll()
         {
             var comments = await _repository.GetAll();
@@ -36,71 +53,26 @@ namespace Service.Services
             return commentDto;
         }
 
-        public void Add(Comment item)
-        {
-        }
-
-        public void Update(Comment item)
-        {
-        }
-
-        public void Delete(int id)
-        {
-        }
-
-        public void AddComment(int userId, int? branchId, int? routeId, string content)
+        public Task<List<CommentDto>> GetCommentByBranchId(int branchId)
         {
             throw new NotImplementedException();
         }
 
-        public CommentDto GetCommentById(int commentId)
+        public Task<List<CommentDto>> GetCommentByRouteId(int routeId)
         {
             throw new NotImplementedException();
         }
 
-        public List<CommentDto> GetCommentByBranchId(int branchId)
+        public async Task<CommentDto> Update(int id, CommentDto item)
         {
-            throw new NotImplementedException();
-        }
-
-        public List<CommentDto> GetCommentByRouteId(int routeId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void DeleteComment(int commentId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void UpdateComment(int commentId, string content)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<List<Comment>> IService<Comment>.GetAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<Comment> IService<Comment>.GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<Comment> IService<Comment>.Add(Comment item)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Comment> Update(int id, Comment item)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task IService<Comment>.Delete(int id)
-        {
-            throw new NotImplementedException();
+            var comment = await _repository.GetById(id);
+            if (comment == null)
+            {
+                throw new KeyNotFoundException($"Comment with id {id} not found.");
+            }
+            _mapper.Map(item, comment);
+            var updatedComment = await _repository.Update(comment.CommentId, comment);
+            return _mapper.Map<CommentDto>(updatedComment);
         }
     }
 }
