@@ -45,19 +45,43 @@ namespace Service.Services
             return availabilityDtos;
         }
 
-        public Task<AvailabilityDto> GetAvailabilityByAttractionId(int attractionId)
+        public async Task<List<AvailabilityDto>> GetAvailabilityByAttractionId(int attractionId)
         {
-            throw new NotImplementedException();
+            var availabilities = await _repository.GetAll();
+            var attractionAvailability = availabilities.Where(a => a.AttractionId == attractionId).ToList();
+
+            if (!attractionAvailability.Any())
+            {
+                throw new KeyNotFoundException($"No availability defined for attraction {attractionId}.");
+            }
+
+            return _mapper.Map<List<AvailabilityDto>>(attractionAvailability);
         }
 
-        public Task<AvailabilityDto> GetAvailabilityByBranchId(int branchId)
+        public async Task<List<AvailabilityDto>> GetAvailabilityByBranchId(int branchId)
         {
-            throw new NotImplementedException();
+            var availabilities = await _repository.GetAll();
+            var branchAvailability = availabilities.Where(a => a.BranchId == branchId).ToList();
+
+            if (!branchAvailability.Any())
+            {
+                throw new KeyNotFoundException($"No availability defined for branch {branchId}.");
+            }
+
+            return _mapper.Map<List<AvailabilityDto>>(branchAvailability);
         }
 
-        public Task<AvailabilityDto> GetAvailabilityByRouteId(int routeId)
+        public async Task<List<AvailabilityDto>> GetAvailabilityByRouteId(int routeId)
         {
-            throw new NotImplementedException();
+            var availabilities = await _repository.GetAll();
+            var routeAvailability = availabilities.Where(a => a.RouteId == routeId).ToList();
+
+            if (!routeAvailability.Any())
+            {
+                throw new KeyNotFoundException($"No availability defined for route {routeId}.");
+            }
+
+            return _mapper.Map<List<AvailabilityDto>>(routeAvailability);
         }
 
         public async Task<AvailabilityDto> GetById(int id)
