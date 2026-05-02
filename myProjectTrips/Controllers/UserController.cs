@@ -30,7 +30,7 @@ namespace myProject_trips.Controllers
         {
             try
             {
-                var addedUser = await _userService.Add(registerDto);
+                var addedUser = await _userService.Register(registerDto);
                 return Ok(addedUser);
             }
             catch (Exception ex)
