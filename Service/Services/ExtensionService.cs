@@ -32,6 +32,14 @@ namespace Service.Services
             services.AddScoped<IBranchService, BranchService>();
             services.AddScoped<ICommentService, CommentService>();
 
+            services.AddScoped<IsExist<TripDto>, TripService>();
+            services.AddScoped<IsExist<UserDto>, UserService>();
+            services.AddScoped<IsExist<RouteDto>, RouteService>();
+            services.AddScoped<IsExist<AttractionDto>, AttractionService>();
+            services.AddScoped<IsExist<AvailabilityDto>, AvailabilityService>();
+            services.AddScoped<IsExist<BranchDto>, BranchService>();
+            services.AddScoped<IsExist<CommentDto>, CommentService>();
+
             return services;
         }
     }
