@@ -24,7 +24,7 @@ namespace Service.Services
             _tripService = tripService;
         }
 
-        public async Task<UserDto> Add(UserDto item)
+        public async Task<UserDto> Add(RegisterDto item)
         {
             var user = await _repository.GetByEmail(item.UserEmail);
             if (user != null)
@@ -154,10 +154,10 @@ namespace Service.Services
             return _mapper.Map<UserDto>(updatedUser);
         }
 
-        public async Task<UserDto> Exist(UserDto user)
+        public async Task<UserDto> Exist(LoginDto user)
         {
             var list = await GetAll();
-            return list.FirstOrDefault(a => a.UserEmail == user.UserEmail);
+            return list.FirstOrDefault(a => a.UserEmail == user.Email);
         }
     }
 }

@@ -9,6 +9,6 @@ namespace Service.Interfaces
 {
     public interface IsExist<T>
     {
-        public Task<T> Exist(T item);
+        public Task<T> Exist(LoginDto l);
     }
 }
