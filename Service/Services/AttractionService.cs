@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Service.Services
 {
-    public class AttractionService : IService<AttractionDto>
+    public class AttractionService : IService<AttractionDto>, IsExist<AttractionDto>
     {
         private readonly IRepository<Attraction> _repository;
         private readonly IMapper _mapper;

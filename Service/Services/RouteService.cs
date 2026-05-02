@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Service.Services
 {
-    public class RouteService : IService<RouteDto>
+    public class RouteService : IService<RouteDto>, IsExist<RouteDto>
     {
         private readonly IRepository<Route> _repository;
         private readonly IMapper _mapper;

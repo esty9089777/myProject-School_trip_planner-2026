@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Service.Services
 {
-    public class TripService : ITripService
+    public class TripService : ITripService, IsExist<TripDto>
     {
         private readonly IRepository<Trip> _repository;
         private readonly IMapper _mapper;

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Service.Services
 {
-    public class UserService : IUserService
+    public class UserService : IUserService, IsExist<UserDto>
     {
         private readonly IRepository<User> _repository;
         private readonly IMapper _mapper;

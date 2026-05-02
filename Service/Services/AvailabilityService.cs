@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Service.Services
 {
-    public class AvailabilityService : IAvailabilityService
+    public class AvailabilityService : IAvailabilityService, IsExist<AvailabilityDto>
     {
         private readonly IAvailabilityRepository _repository;
         private readonly IMapper _mapper;

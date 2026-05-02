@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Service.Services
 {
-    public class BranchService : IBranchService
+    public class BranchService : IBranchService, IsExist<BranchDto>
     {
         private readonly IBranchRepository _repository;
         private readonly IMapper _mapper;

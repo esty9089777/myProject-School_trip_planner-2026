@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Service.Services
 {
-    public class CommentService : ICommentService
+    public class CommentService : ICommentService, IsExist<CommentDto>
     {
         private readonly IRepository<Comment> _repository;
         private readonly IMapper _mapper;
