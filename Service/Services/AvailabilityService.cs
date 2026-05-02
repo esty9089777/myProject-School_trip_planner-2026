@@ -146,5 +146,11 @@ namespace Service.Services
             var updatedAvailability = await _repository.Update(availability.AvailabilityId, availability);
             return _mapper.Map<AvailabilityDto>(updatedAvailability);
         }
+
+        public async Task<AvailabilityDto> Exist(AvailabilityDto availability)
+        {
+            var list = await GetAll();
+            return list.FirstOrDefault(a => a.AvailabilityId == availability.AvailabilityId);
+        }
     }
 }

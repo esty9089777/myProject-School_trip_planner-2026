@@ -81,5 +81,11 @@ namespace Service.Services
             var updatedRoute = await _repository.Update(route.RouteId, route);
             return _mapper.Map<RouteDto>(updatedRoute);
         }
+
+        public async Task<RouteDto> Exist(RouteDto route)
+        {
+            var list = await GetAll();
+            return list.FirstOrDefault(a => a.RouteId == route.RouteId);
+        }
     }
 }

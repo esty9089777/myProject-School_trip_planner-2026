@@ -153,5 +153,11 @@ namespace Service.Services
             var updatedUser = await _repository.Update(id, existingUser);
             return _mapper.Map<UserDto>(updatedUser);
         }
+
+        public async Task<UserDto> Exist(UserDto user)
+        {
+            var list = await GetAll();
+            return list.FirstOrDefault(a => a.UserEmail == user.UserEmail);
+        }
     }
 }

@@ -95,5 +95,11 @@ namespace Service.Services
             }
             await _repository.Delete(id);
         }
+
+        public async Task<AttractionDto> Exist(AttractionDto attraction)
+        {
+            var list = await GetAll();
+            return list.FirstOrDefault(a => a.AttractionId == attraction.AttractionId);
+        }
     }
 }

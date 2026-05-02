@@ -93,5 +93,11 @@ namespace Service.Services
             var updatedBranch = await _repository.Update(branch.BranchId, branch);
             return _mapper.Map<BranchDto>(updatedBranch);
         }
+
+        public async Task<BranchDto> Exist(BranchDto branch)
+        {
+            var list = await GetAll();
+            return list.FirstOrDefault(a => a.BranchId == branch.BranchId);
+        }
     }
 }

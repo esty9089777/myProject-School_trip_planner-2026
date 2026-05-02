@@ -4,8 +4,8 @@ namespace Common.Dto
 {
     public class RouteDto
     {
-        public int BranchId { get; set; }
-        public string BranchName { get; set; }
+        public int RouteId { get; set; }
+        public string RouteName { get; set; }
         public bool IsFree { get; set; }
         public bool IsWet { get; set; }
         public TimeOnly Duration { get; set; }

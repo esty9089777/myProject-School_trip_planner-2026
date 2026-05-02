@@ -81,5 +81,11 @@ namespace Service.Services
             var updatedComment = await _repository.Update(comment.CommentId, comment);
             return _mapper.Map<CommentDto>(updatedComment);
         }
+
+        public async Task<CommentDto> Exist(CommentDto comment)
+        {
+            var list = await GetAll();
+            return list.FirstOrDefault(a => a.CommentId == comment.CommentId);
+        }
     }
 }

@@ -75,5 +75,11 @@ namespace Service.Services
             var updatedTrip = await _repository.Update(trip.TripId, trip);
             return _mapper.Map<TripDto>(updatedTrip);
         }
+
+        public async Task<TripDto> Exist(TripDto trip)
+        {
+            var list = await GetAll();
+            return list.FirstOrDefault(a => a.TripId == trip.TripId);
+        }
     }
 }
