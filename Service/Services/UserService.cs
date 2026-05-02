@@ -24,16 +24,20 @@ namespace Service.Services
             _tripService = tripService;
         }
 
-        public async Task<UserDto> Add(RegisterDto item)
+        public async Task<UserDto> Add(UserDto item)
         {
-            var user = await _repository.GetByEmail(item.UserEmail);
+            throw new NotImplementedException("Use Register method for new users");
+        }
+
+        public async Task<UserDto> Register(RegisterDto registerDto)
+        {
+            var user = await _repository.GetByEmail(registerDto.UserEmail);
             if (user != null)
             {
                 throw new Exception("User already exists");
             }
-            var userEntity = _mapper.Map<User>(item);
+            var userEntity = _mapper.Map<User>(registerDto);
             var addedUser = await _repository.Add(userEntity);
-
             return _mapper.Map<UserDto>(addedUser);
         }
 

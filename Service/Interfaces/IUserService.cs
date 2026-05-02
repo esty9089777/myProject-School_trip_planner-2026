@@ -10,6 +10,7 @@ namespace Service.Interfaces
 {
     public interface IUserService: IService<UserDto>
     {
+        Task<UserDto> Register(RegisterDto registerDto);
         Task<UserDto> Login(LoginDto login);
         Task ChangePassword(int userId, ChangePasswordDto changePasswordDto);
         Task ResetPassword(string email);
