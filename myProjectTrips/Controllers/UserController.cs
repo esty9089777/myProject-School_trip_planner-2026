@@ -1,4 +1,5 @@
 ﻿using Common.Dto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -52,6 +53,59 @@ namespace myProject_trips.Controllers
 
             return Unauthorized("שם משתמש או סיסמה שגויים");
         }
+
+        [HttpGet]
+        public async Task<List<UserDto>> Get()
+        {
+            return await _userService.GetAll();
+        }
+
+        [HttpGet("{id}")]
+        public async Task<UserDto> Get(int id)
+        {
+            return await _userService.GetById(id);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<UserDto>> CreateUser([FromBody] UserDto newUser)
+        {
+            if (newUser == null)
+            {
+                return BadRequest("Missing user data");
+            }
+            var createdUser = await _userService.Add(newUser);
+
+            return CreatedAtAction(nameof(Get), new { id = createdUser.UserId }, createdUser);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<UserDto>> Put(int id, [FromBody] UserDto user)
+        {
+            if (id != user.UserId)
+            {
+                return BadRequest("The user ID does not match");
+            }
+            var result = await _userService.Update(id, user);
+            if (result == null)
+            {
+                return NotFound("User not found");
+            }
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var existingUser = await _userService.GetById(id); 
+            if (existingUser == null)
+            {
+                return NotFound($"משתמש עם מזהה {id} לא נמצא במערכת.");
+            }
+            
+            await _userService.Delete(id);
+            return NoContent();
+        }
+
 
         private string GenerateToken(UserDto user)
         {
