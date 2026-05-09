@@ -11,5 +11,6 @@ namespace Service.Interfaces
     public interface ITripService:IService<TripDto>
     {
         Task<List<TripDto>> GetTripsByUserId(int userId);
+        Task<TripDto> GenerateSmartTrip(UserDto user, TripRequestDto request);
     }
 }

@@ -15,11 +15,15 @@ namespace Service.Services
     {
         private readonly IRepository<Trip> _repository;
         private readonly IMapper _mapper;
+        private readonly IBranchRepository _branchRepository;
+        private readonly IRepository<Route> _routeRepository;
 
-        public TripService(IRepository<Trip> repository, IMapper mapper)
+        public TripService(IRepository<Trip> repository, IMapper mapper, IBranchRepository branchRepository, IRepository<Route> routeRepository)
         {
             _repository = repository;
             _mapper = mapper;
+            _branchRepository = branchRepository;
+            _routeRepository = routeRepository;
         }
 
         public async Task<TripDto> Add(TripDto item)
@@ -27,6 +31,23 @@ namespace Service.Services
             var entity = _mapper.Map<Trip>(item);
             var addedEntity = await _repository.Add(entity);
             return _mapper.Map<TripDto>(addedEntity);
+        }
+
+        public async Task<TripDto> GenerateSmartTrip(UserDto user, TripRequestDto request)
+        {
+            var allAttractiions = await _branchRepository.GetAll();
+            var allRoutes = await _routeRepository.GetAll();
+
+            var newTrip = new TripDto
+            {
+                UserEmail = user.UserEmail,
+                UserName = user.UserName,
+
+                Routes = new List<RouteDto>(),
+                Branches = new List<BranchDto>()
+            };
+
+            return await Add(newTrip);
         }
 
         public async Task Delete(int id)
