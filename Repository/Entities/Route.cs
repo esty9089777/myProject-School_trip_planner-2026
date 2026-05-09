@@ -2,6 +2,7 @@
 
 namespace Repository.Entities
 {
+    [Flags]
     public enum AgeGroupEnum
     {
         AtoC = 1,   // כיתות א-ג
