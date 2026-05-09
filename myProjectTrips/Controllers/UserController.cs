@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using myProject_trips.Extensions;
 using Service.Interfaces;
 using Service.Services;
 using System.IdentityModel.Tokens.Jwt;
@@ -61,6 +62,18 @@ namespace myProject_trips.Controllers
         public async Task<List<UserDto>> Get()
         {
             return await _userService.GetAll();
+        }
+
+        [Authorize]
+        [HttpGet("my-trips")]
+        public async Task<IActionResult> GetMyTrips()
+        {
+            var currentUser = User.GetUserDetails();
+            if (currentUser == null) return Unauthorized();
+
+            var trips = await _userService.GetUserTrips(currentUser.UserId);
+
+            return Ok(trips);
         }
 
         [HttpGet("{id}")]
