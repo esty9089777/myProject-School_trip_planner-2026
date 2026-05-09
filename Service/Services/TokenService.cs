@@ -1,6 +1,7 @@
 ﻿using Common.Dto;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Service.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Service.Services
 {
-    public class TokenService
+    public class TokenService : ITokenService
     {
         private readonly IConfiguration _configuration;
         public TokenService(IConfiguration configuration)

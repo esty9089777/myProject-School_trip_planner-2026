@@ -31,6 +31,7 @@ namespace Service.Services
             services.AddScoped<IAvailabilityService, AvailabilityService>();
             services.AddScoped<IBranchService, BranchService>();
             services.AddScoped<ICommentService, CommentService>();
+            services.AddScoped<ITokenService, TokenService>();
 
             services.AddScoped<IsExist<TripDto>, TripService>();
             services.AddScoped<IsExist<UserDto>, UserService>();
