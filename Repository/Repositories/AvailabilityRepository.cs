@@ -45,19 +45,25 @@ namespace Repository.Repositories
             return await _ctx.Availabilities.ToListAsync();
         }
 
-        public async Task<Availability> GetAvailabilityByAttractionId(int attractionId)
+        public async Task<List<Availability>> GetAvailabilityByAttractionId(int attractionId)
         {
-            return await _ctx.Availabilities.FirstOrDefaultAsync(x => x.AttractionId == attractionId);
+            return await _ctx.Availabilities
+                .Where(x => x.AttractionId == attractionId)
+                .ToListAsync();
         }
 
-        public async Task<Availability> GetAvailabilityByBranchId(int branchId)
+        public async Task<List<Availability>> GetAvailabilityByBranchId(int branchId)
         {
-            return await _ctx.Availabilities.FirstOrDefaultAsync(x => x.BranchId == branchId);
+            return await _ctx.Availabilities
+                .Where(x => x.BranchId == branchId)
+                .ToListAsync();
         }
 
-        public async Task<Availability> GetAvailabilityByRouteId(int routeId)
+        public async Task<List<Availability>> GetAvailabilityByRouteId(int routeId)
         {
-            return await _ctx.Availabilities.FirstOrDefaultAsync(x => x.RouteId == routeId);
+            return await _ctx.Availabilities
+                .Where(x => x.RouteId == routeId)
+                .ToListAsync();
         }
 
         public Task<Availability> GetByEmail(string email)
@@ -65,9 +71,13 @@ namespace Repository.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<Availability> GetById(int id)
+        public async Task<Availability> GetById(int id)
         {
-            return _ctx.Availabilities.FirstOrDefaultAsync(x => x.AvailabilityId == id);
+            return await _ctx.Availabilities
+                    .Include(x => x.Attraction)
+                    .Include(x => x.Route)
+                    .Include(x => x.Branch)
+                    .FirstOrDefaultAsync(x => x.AvailabilityId == id);
         }
 
         public async Task<Availability> IsBranchAvailable(int branchId, DayOfWeek day, TimeOnly time)

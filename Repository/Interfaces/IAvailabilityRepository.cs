@@ -9,9 +9,9 @@ namespace Repository.Interfaces
 {
     public interface IAvailabilityRepository:IRepository<Availability>
     {
-        Task<Availability> GetAvailabilityByBranchId(int branchId);
-        Task<Availability> GetAvailabilityByAttractionId(int attractionId);
-        Task<Availability> GetAvailabilityByRouteId(int routeId);
+        Task<List<Availability>> GetAvailabilityByBranchId(int branchId);
+        Task<List<Availability>> GetAvailabilityByAttractionId(int attractionId);
+        Task<List<Availability>> GetAvailabilityByRouteId(int routeId);
         Task<Availability> IsBranchAvailable(int branchId, DayOfWeek day, TimeOnly time);
         Task<Availability> IsRouteAvailable(int routeId, DayOfWeek day, TimeOnly time);
 
