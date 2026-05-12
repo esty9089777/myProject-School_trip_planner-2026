@@ -12,11 +12,13 @@ namespace myProject_trips.Controllers
     [ApiController]
     public class TripController : ControllerBase
     {
+        private readonly IAuthorizationService _authorizationService;
         private readonly ITripService _tripService;
 
-        public TripController(ITripService tripService)
+        public TripController(ITripService tripService, IAuthorizationService authorizationService)
         {
             _tripService = tripService;
+            _authorizationService = authorizationService;
         }
 
         [Authorize(Roles = "Admin")]
@@ -60,25 +62,43 @@ namespace myProject_trips.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] TripDto trip)
+        [Authorize]
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put(int id, [FromBody] TripDto tripDto)
         {
-            if (id != trip.TripId)
+            if (id != tripDto.TripId)
             {
                 return BadRequest("מזהה הטיול אינו תואם.");
             }
 
-            var updatedTrip = await _tripService.Update(id, trip);
-            if (updatedTrip == null)
+            var existingTrip = await _tripService.GetById(id);
+            if (existingTrip == null) return NotFound("הטיול לעדכון לא נמצא.");
+
+            var authResult = await _authorizationService.AuthorizeAsync(User, existingTrip, "EditPolicy");
+
+            if (!authResult.Succeeded)
             {
-                return NotFound("הטיול לעדכון לא נמצא.");
+                return Forbid();
             }
 
+            var updatedTrip = await _tripService.Update(id, tripDto);
             return Ok(updatedTrip);
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
+            var trip = await _tripService.GetById(id);
+            if (trip == null) return NotFound("הטיול למחיקה לא נמצא.");
+
+            var authResult = await _authorizationService.AuthorizeAsync(User, trip, "EditPolicy");
+
+            if (!authResult.Succeeded)
+            {
+                return Forbid();
+            }
+
             await _tripService.Delete(id);
             return NoContent();
         }

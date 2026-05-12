@@ -10,11 +10,13 @@ namespace myProject_trips.Controllers
     [ApiController]
     public class AvailabilityController : ControllerBase
     {
+        private readonly IAuthorizationService _authorizationService;
         private readonly IAvailabilityService _availabilityService;
 
-        public AvailabilityController(IAvailabilityService availabilityService)
+        public AvailabilityController(IAvailabilityService availabilityService, IAuthorizationService authorizationService)
         {
             _availabilityService = availabilityService;
+            _authorizationService = authorizationService;
         }
 
         [HttpGet]
@@ -35,53 +37,39 @@ namespace myProject_trips.Controllers
             return Ok(availability);
         }
 
-        [Authorize]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] AvailabilityDto availability)
+        public async Task<IActionResult> Put(int id, [FromBody] AvailabilityDto availabilityDto)
         {
-            var userDetails = User.GetUserDetails();
-            if (userDetails == null) return Unauthorized();
+            var existingAvailability = await _availabilityService.GetById(id);
+            if (existingAvailability == null) return NotFound();
 
-            try
-            {
-                var result = await _availabilityService.UpdateProtected(
-                    id,
-                    availability,
-                    userDetails.UserId,
-                    User.IsInRole("Admin")
-                );
+            var authResult = await _authorizationService.AuthorizeAsync(User, existingAvailability, "EditPolicy");
 
-                if (result == null) return NotFound();
-                return Ok(result);
-            }
-            catch (UnauthorizedAccessException ex)
+            if (!authResult.Succeeded)
             {
                 return Forbid();
             }
+
+            var result = await _availabilityService.Update(id, availabilityDto);
+            return Ok(result);
         }
 
         [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var userDetails = User.GetUserDetails();
-            if (userDetails == null) return Unauthorized();
+            var availability = await _availabilityService.GetById(id);
+            if (availability == null) return NotFound();
 
-            try
-            {
-                var success = await _availabilityService.DeleteProtected(
-                    id,
-                    userDetails.UserId,
-                    User.IsInRole("Admin")
-                );
+            var authResult = await _authorizationService.AuthorizeAsync(User, availability, "EditPolicy");
 
-                if (!success) return NotFound("הזמינות למחיקה לא נמצאה");
-                return NoContent();
-            }
-            catch (UnauthorizedAccessException ex)
+            if (!authResult.Succeeded)
             {
                 return Forbid();
             }
+
+            await _availabilityService.Delete(id);
+            return NoContent();
         }
 
         [HttpGet("branch/{branchId}")]

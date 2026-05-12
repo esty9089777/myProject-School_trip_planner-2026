@@ -1,4 +1,5 @@
 ﻿using Repository.Entities;
+using Repository.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Common.Dto
 {
-    public class CommentDto
+    public class CommentDto : IOwnable
     {
         public int CommentId { get; set; }
         public int BranchId { get; set; }
@@ -15,5 +16,6 @@ namespace Common.Dto
         public string myComment { get; set; }
         public string SchoolName { get; set; }
         public DateOnly DateCommon { get; set; }
+        public int CreatorId { get; set; }
     }
 }

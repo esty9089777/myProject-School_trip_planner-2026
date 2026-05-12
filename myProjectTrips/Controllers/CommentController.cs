@@ -12,11 +12,13 @@ namespace myProject_trips.Controllers
     [ApiController]
     public class CommentController : ControllerBase
     {
+        private readonly IAuthorizationService _authorizationService;
         private readonly ICommentService _commentService;
 
-        public CommentController(ICommentService commentService)
+        public CommentController(ICommentService commentService, IAuthorizationService authorizationService)
         {
             _commentService = commentService;
+            _authorizationService = authorizationService;
         }
 
         [HttpGet]
@@ -37,43 +39,45 @@ namespace myProject_trips.Controllers
             return Ok(comment);
         }
 
+        [Authorize]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] CommentDto comment)
+        public async Task<IActionResult> Put(int id, [FromBody] CommentDto commentDto)
         {
-            if (id != comment.CommentId)
+            if (id != commentDto.CommentId)
             {
                 return BadRequest("מזהה התגובה אינו תואם.");
             }
 
-            var updatedComment = await _commentService.Update(id, comment);
-            if (updatedComment == null)
+            var existingComment = await _commentService.GetById(id);
+            if (existingComment == null) return NotFound("התגובה לעדכון לא נמצאה.");
+
+            var authResult = await _authorizationService.AuthorizeAsync(User, existingComment, "EditPolicy");
+
+            if (!authResult.Succeeded)
             {
-                return NotFound("התגובה לעדכון לא נמצאה.");
+                return Forbid();
             }
 
-            return Ok(updatedComment);
+            var updated = await _commentService.Update(id, commentDto);
+            return Ok(updated);
         }
 
         [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            int currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            bool isAdmin = User.IsInRole("Admin");
+            var comment = await _commentService.GetById(id);
+            if (comment == null) return NotFound("התגובה למחיקה לא נמצאה.");
 
-            try
+            var authResult = await _authorizationService.AuthorizeAsync(User, comment, "EditPolicy");
+
+            if (!authResult.Succeeded)
             {
-                await _commentService.DeleteProtected(id, currentUserId, isAdmin);
-                return NoContent();
+                return Forbid();
             }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Forbid(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return NotFound(ex.Message);
-            }
+
+            await _commentService.Delete(id);
+            return NoContent();
         }
 
         [HttpGet("branch/{branchId}")]

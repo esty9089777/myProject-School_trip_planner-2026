@@ -11,11 +11,13 @@ namespace myProject_trips.Controllers
     [ApiController]
     public class RouteController : ControllerBase
     {
+        private readonly IAuthorizationService _authorizationService;
         private readonly IRouteService _routeService;
 
-        public RouteController(IRouteService routeService)
+        public RouteController(IRouteService routeService, IAuthorizationService authorizationService)
         {
             _routeService = routeService;
+            _authorizationService = authorizationService;
         }
 
         [HttpGet]
@@ -38,51 +40,38 @@ namespace myProject_trips.Controllers
 
         [Authorize]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] RouteDto route)
+        public async Task<IActionResult> Put(int id, [FromBody] RouteDto routeDto)
         {
-            var userDetails = User.GetUserDetails();
-            if (userDetails == null) return Unauthorized();
+            var existingRoute = await _routeService.GetById(id);
+            if (existingRoute == null) return NotFound();
 
-            try
-            {
-                var result = await _routeService.UpdateProtected(
-                    id,
-                    route,
-                    userDetails.UserId,
-                    User.IsInRole("Admin")
-                );
+            var authResult = await _authorizationService.AuthorizeAsync(User, existingRoute, "EditPolicy");
 
-                if (result == null) return NotFound();
-                return Ok(result);
-            }
-            catch (UnauthorizedAccessException ex)
+            if (!authResult.Succeeded)
             {
                 return Forbid();
             }
+
+            var result = await _routeService.Update(id, routeDto);
+            return Ok(result);
         }
 
         [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var userDetails = User.GetUserDetails();
-            if (userDetails == null) return Unauthorized();
+            var route = await _routeService.GetById(id);
+            if (route == null) return NotFound();
 
-            try
-            {
-                var success = await _routeService.DeleteProtected(
-                    id,
-                    userDetails.UserId,
-                    User.IsInRole("Admin")
-                );
+            var authResult = await _authorizationService.AuthorizeAsync(User, route, "EditPolicy");
 
-                if (!success) return NotFound("המסלול למחיקה לא נמצא");
-                return NoContent();
-            }
-            catch (UnauthorizedAccessException ex)
+            if (!authResult.Succeeded)
             {
                 return Forbid();
             }
+
+            await _routeService.Delete(id);
+            return NoContent();
         }
 
         [HttpGet("nearby")]

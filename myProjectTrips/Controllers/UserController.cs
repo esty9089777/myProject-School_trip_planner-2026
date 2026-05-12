@@ -104,33 +104,36 @@ namespace myProject_trips.Controllers
         //    return CreatedAtAction(nameof(Get), new { id = createdUser.UserId }, createdUser);
         //}
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] UserDto user)
+        public async Task<IActionResult> Put(int id, [FromBody] UserDto userDto)
         {
-            if (id != user.UserId)
+            if (id != userDto.UserId)
             {
-                return BadRequest("The user ID does not match");
+                return BadRequest("מזהה המשתמש אינו תואם.");
             }
-            var result = await _userService.Update(id, user);
+
+            var result = await _userService.Update(id, userDto);
             if (result == null)
             {
-                return NotFound("User not found");
+                return NotFound("משתמש לא נמצא.");
             }
+
             return NoContent();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var existingUser = await _userService.GetById(id); 
+            var existingUser = await _userService.GetById(id);
             if (existingUser == null)
             {
-                return NotFound($"משתמש עם מזהה {id} לא נמצא במערכת.");
+                return NotFound($"משתמש עם מזהה {id} לא נמצא במערכת");
             }
-            
+
             await _userService.Delete(id);
             return NoContent();
         }
-
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Repository.Entities;
+using Repository.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Common.Dto
 {
-    public class AttractionDto
+    public class AttractionDto : IOwnable
     {
         public int AttractionId { get; set; }
         public string AttraName { get; set; }

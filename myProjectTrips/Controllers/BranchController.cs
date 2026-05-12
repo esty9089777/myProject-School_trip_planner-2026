@@ -11,11 +11,13 @@ namespace myProject_trips.Controllers
     [ApiController]
     public class BranchController : ControllerBase
     {
+        private readonly IAuthorizationService _authorizationService;
         private readonly IBranchService _branchService;
 
-        public BranchController(IBranchService branchService)
+        public BranchController(IBranchService branchService, IAuthorizationService authorizationService)
         {
             _branchService = branchService;
+            _authorizationService = authorizationService;
         }
 
         [HttpGet]
@@ -38,51 +40,38 @@ namespace myProject_trips.Controllers
 
         [Authorize]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] BranchDto branch)
+        public async Task<IActionResult> Put(int id, [FromBody] BranchDto branchDto)
         {
-            var userDetails = User.GetUserDetails();
-            if (userDetails == null) return Unauthorized();
+            var existingBranch = await _branchService.GetById(id);
+            if (existingBranch == null) return NotFound("הסניף לא נמצא.");
 
-            try
-            {
-                var result = await _branchService.UpdateProtected(
-                    id,
-                    branch,
-                    userDetails.UserId,
-                    User.IsInRole("Admin")
-                );
+            var authResult = await _authorizationService.AuthorizeAsync(User, existingBranch, "EditPolicy");
 
-                if (result == null) return NotFound();
-                return Ok(result);
-            }
-            catch (UnauthorizedAccessException ex)
+            if (!authResult.Succeeded)
             {
                 return Forbid();
             }
+
+            var result = await _branchService.Update(id, branchDto);
+            return Ok(result);
         }
 
         [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var userDetails = User.GetUserDetails();
-            if (userDetails == null) return Unauthorized();
+            var branch = await _branchService.GetById(id);
+            if (branch == null) return NotFound("הסניף למחיקה לא נמצא.");
 
-            try
-            {
-                var success = await _branchService.DeleteProtected(
-                    id,
-                    userDetails.UserId,
-                    User.IsInRole("Admin")
-                );
+            var authResult = await _authorizationService.AuthorizeAsync(User, branch, "EditPolicy");
 
-                if (!success) return NotFound("הסניף למחיקה לא נמצא");
-                return NoContent();
-            }
-            catch (UnauthorizedAccessException ex)
+            if (!authResult.Succeeded)
             {
                 return Forbid();
             }
+
+            await _branchService.Delete(id);
+            return NoContent();
         }
 
         [HttpGet("attraction/{attractionId}")]

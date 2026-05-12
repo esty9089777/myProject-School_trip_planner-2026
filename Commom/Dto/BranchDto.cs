@@ -1,7 +1,9 @@
 ﻿
+using Repository.Interfaces;
+
 namespace Common.Dto
 {
-    public class BranchDto
+    public class BranchDto : IOwnable
     {
         public int BranchId { get; set; }
         public int AttractionId { get; set; }
@@ -12,6 +14,7 @@ namespace Common.Dto
         public string Description { get; set; }
         public string ImageUrl { get; set; }
         public int Points { get; set; }
+        public int CreatorId { get; set; }
         public List<AvailabilityDto> Availabilities { get; set; }
     }
 }

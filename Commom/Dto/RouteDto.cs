@@ -1,8 +1,10 @@
 ﻿
 
+using Repository.Interfaces;
+
 namespace Common.Dto
 {
-    public class RouteDto
+    public class RouteDto :IOwnable
     {
         public int RouteId { get; set; }
         public string RouteName { get; set; }
