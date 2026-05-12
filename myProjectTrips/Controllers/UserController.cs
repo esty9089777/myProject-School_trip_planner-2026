@@ -19,14 +19,12 @@ namespace myProject_trips.Controllers
     {
         private readonly IUserService _userService;
         private readonly IsExist<UserDto> _isExist;
-        private IConfiguration _configuration;
         private readonly TokenService _tokenService;
 
-        public UserController(IUserService userService, IsExist<UserDto> isExist, IConfiguration configuration, TokenService tokenService)
+        public UserController(IUserService userService, IsExist<UserDto> isExist, TokenService tokenService)
         {
             _userService = userService;
             _isExist = isExist;
-            _configuration = configuration;
             _tokenService = tokenService;
         }
 
@@ -52,16 +50,22 @@ namespace myProject_trips.Controllers
             if (user != null)
             {
                 var token = _tokenService.GenerateToken(user);
-                return Ok(new { Token = token });
+                return Ok(new {
+                    Token = token,
+                    Username = user.UserName,
+                    role = user.Role
+                });
             }
 
             return Unauthorized("שם משתמש או סיסמה שגויים");
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
-        public async Task<List<UserDto>> Get()
+        public async Task<IActionResult> Get()
         {
-            return await _userService.GetAll();
+            var users = await _userService.GetAll();
+            return Ok(users);
         }
 
         [Authorize]
@@ -76,26 +80,32 @@ namespace myProject_trips.Controllers
             return Ok(trips);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("{id}")]
-        public async Task<UserDto> Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            return await _userService.GetById(id);
+            var user = await _userService.GetById(id);
+            if (user == null)
+            {
+                return NotFound($"משתמש עם מזהה {id} לא נמצא במערכת.");
+            }
+            return Ok(user);
         }
 
         [HttpPost]
-        public async Task<ActionResult<UserDto>> CreateUser([FromBody] UserDto newUser)
-        {
-            if (newUser == null)
-            {
-                return BadRequest("Missing user data");
-            }
-            var createdUser = await _userService.Add(newUser);
+        //public async Task<ActionResult> CreateUser([FromBody] UserDto newUser)
+        //{
+        //    if (newUser == null)
+        //    {
+        //        return BadRequest("Missing user data");
+        //    }
+        //    var createdUser = await _userService.Add(newUser);
 
-            return CreatedAtAction(nameof(Get), new { id = createdUser.UserId }, createdUser);
-        }
+        //    return CreatedAtAction(nameof(Get), new { id = createdUser.UserId }, createdUser);
+        //}
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<UserDto>> Put(int id, [FromBody] UserDto user)
+        public async Task<IActionResult> Put(int id, [FromBody] UserDto user)
         {
             if (id != user.UserId)
             {
