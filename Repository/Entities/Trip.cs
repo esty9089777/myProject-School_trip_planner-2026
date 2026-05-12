@@ -1,6 +1,8 @@
-﻿namespace Repository.Entities
+﻿using Repository.Interfaces;
+
+namespace Repository.Entities
 {
-    public class Trip
+    public class Trip : IOwnable
     {
         public int TripId { get; set; }
         public int UserId { get; set; }

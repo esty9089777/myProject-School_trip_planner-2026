@@ -1,6 +1,8 @@
-﻿namespace Repository.Entities
+﻿using Repository.Interfaces;
+
+namespace Repository.Entities
 {
-    public class Attraction
+    public class Attraction : IOwnable
     {
         public int AttractionId { get; set; }
         public string AttraName { get; set; }

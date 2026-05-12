@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using myProject_trips.Extensions;
 using Service.Interfaces;
+using Service.Services;
 
 namespace myProject_trips.Controllers
 {
@@ -11,11 +12,13 @@ namespace myProject_trips.Controllers
     [ApiController]
     public class AttractionController : ControllerBase
     {
+        private readonly IAuthorizationService _authorizationService;
         private readonly IService<AttractionDto> _attractionService;
 
-        public AttractionController(IService<AttractionDto> attractionService)
+        public AttractionController(IService<AttractionDto> attractionService, IAuthorizationService authorizationService)
         {
             _attractionService = attractionService;
+            _authorizationService = authorizationService;
         }
 
         [HttpGet]
@@ -40,51 +43,36 @@ namespace myProject_trips.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] AttractionDto attraction)
         {
-            var userDetails = User.GetUserDetails();
-            if (userDetails == null) return Unauthorized();
+            var existingAttraction = await _attractionService.GetById(id);
+            if (existingAttraction == null) return NotFound();
 
-            try
-            {
-                var result = await _attractionService.UpdateProtected(
-                    id,
-                    attraction,
-                    userDetails.UserId,
-                    User.IsInRole("Admin")
-                );
+            var authResult = await _authorizationService.AuthorizeAsync(User, existingAttraction, "EditPolicy");
 
-                if (result == null) return NotFound();
-                return Ok(result);
-            }
-            catch (UnauthorizedAccessException ex)
+            if (!authResult.Succeeded)
             {
                 return Forbid();
             }
+
+            var result = await _attractionService.Update(id, attraction);
+            return Ok(result);
         }
 
         [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var userDetails = User.GetUserDetails();
-            if (userDetails == null) return Unauthorized();
+            var attraction = await _attractionService.GetById(id);
+            if (attraction == null) return NotFound();
 
-            try
-            {
-                var success = await _attractionService.DeleteProtected(
-                    id,
-                    userDetails.UserId,
-                    User.IsInRole("Admin")
-                );
+            var authResult = await _authorizationService.AuthorizeAsync(User, attraction, "EditPolicy");
 
-                if (!success) return NotFound("האטרקציה למחיקה לא נמצאה");
-                return NoContent();
-            }
-            catch (UnauthorizedAccessException ex)
+            if (!authResult.Succeeded)
             {
                 return Forbid();
             }
-        }
 
-        [HttpGet("attraction/{attractionId}")]
+            await _attractionService.Delete(id);
+            return NoContent();
+        }
     }
 }

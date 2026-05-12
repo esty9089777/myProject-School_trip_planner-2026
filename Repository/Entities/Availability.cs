@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using Repository.Interfaces;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Repository.Entities
 {
-    public class Availability
+    public class Availability : IOwnable
     {
         public int AvailabilityId { get; set; }
 
@@ -17,5 +18,6 @@ namespace Repository.Entities
 
         public TimeOnly OpenTime { get; set; }
         public TimeOnly CloseTime { get; set; }
+        public int CreatorId => Branch?.Attraction?.CreatorId ?? Route?.CreatorId ?? 0;
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using Repository.Interfaces;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Repository.Entities
 {
@@ -14,7 +15,7 @@ namespace Repository.Entities
         NatureReserve,
         HikingTrail
     }
-    public class Branch
+    public class Branch : IOwnable
     {
         public int BranchId { get; set; }
         public string BranchName { get; set; }
@@ -34,5 +35,7 @@ namespace Repository.Entities
 
         public ICollection<Availability> RouteAvailabilities { get; set; } = new List<Availability>();
         public ICollection<Comment> CommentsList { get; set; }
+
+        public int CreatorId => Attraction?.CreatorId ?? 0;
     }
 }

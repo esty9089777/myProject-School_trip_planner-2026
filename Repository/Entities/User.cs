@@ -1,4 +1,6 @@
-﻿namespace Repository.Entities
+﻿using Repository.Interfaces;
+
+namespace Repository.Entities
 {
     public enum SchoolTypeEnum
     {
@@ -13,7 +15,7 @@
         User,
         BusinessOwner
     }
-    public class User
+    public class User : IOwnable
     {
         public int UserId { get; set; }
         public string UserName { get; set; }

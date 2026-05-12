@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using Repository.Interfaces;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Repository.Entities
 {
@@ -24,7 +25,7 @@ namespace Repository.Entities
         Negev = 128,
         Sharon = 256
     }
-    public class Route
+    public class Route : IOwnable
     {
         public int RouteId { get; set; }
         public string RouteName { get; set; }

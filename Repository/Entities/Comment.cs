@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using Repository.Interfaces;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Repository.Entities
 {
-    public class Comment
+    public class Comment : IOwnable
     {
         public int CommentId { get; set; }
         public int BranchId { get; set; }
@@ -12,5 +13,6 @@ namespace Repository.Entities
         public string myComment { get; set; }
         public string SchoolName { get; set; }
         public DateOnly DateCommon { get; set; }
+        public int CreatorId { get; set; }
     }
 }
