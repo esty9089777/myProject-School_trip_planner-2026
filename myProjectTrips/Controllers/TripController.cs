@@ -13,23 +13,18 @@ namespace myProject_trips.Controllers
     public class TripController : ControllerBase
     {
         private readonly ITripService _tripService;
-        private readonly IsExist<TripDto> _isExist;
-        private IConfiguration _configuration;
-        private readonly TokenService _tokenService;
 
-        public TripController(ITripService tripService, IsExist<TripDto> isExist, IConfiguration configuration, TokenService tokenService)
+        public TripController(ITripService tripService)
         {
             _tripService = tripService;
-            _isExist = isExist;
-            _configuration = configuration;
-            _tokenService = tokenService;
         }
 
         [Authorize(Roles = "Admin")]
         [HttpGet]
-        public async Task<List<TripDto>> Get()
+        public async Task<IActionResult> Get()
         {
-            return await _tripService.GetAll();
+            var trips = await _tripService.GetAll();
+            return Ok(trips);
         }
 
         [Authorize]
@@ -45,44 +40,45 @@ namespace myProject_trips.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<TripDto> Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            return await _tripService.GetById(id);
+            var trip = await _tripService.GetById(id);
+            if (trip == null)
+            {
+                return NotFound($"טיול עם מזהה {id} לא נמצא.");
+            }
+            return Ok(trip);
         }
 
         [Authorize]
         [HttpPost("generate")]
-        public async Task<ActionResult<TripDto>> Generate([FromBody] TripRequestDto request)
+        public async Task<IActionResult> Generate([FromBody] TripRequestDto request)
         {
             var userDetails = User.GetUserDetails();
-            var trip = await _tripService.CreatePersonalizedTrip(userDetails, request);
+            var trip = await _tripService.GenerateSmartTrip(userDetails, request);
             return Ok(trip);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<TripDto>> Put(int id, [FromBody] TripDto trip)
+        public async Task<IActionResult> Put(int id, [FromBody] TripDto trip)
         {
             if (id != trip.TripId)
             {
-                return BadRequest("The trip ID does not match");
+                return BadRequest("מזהה הטיול אינו תואם.");
             }
-            var result = await _tripService.Update(id, trip);
-            if (result == null)
+
+            var updatedTrip = await _tripService.Update(id, trip);
+            if (updatedTrip == null)
             {
-                return NotFound("Trip not found");
+                return NotFound("הטיול לעדכון לא נמצא.");
             }
-            return NoContent();
+
+            return Ok(updatedTrip);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var existingTrip = await _tripService.GetById(id);
-            if (existingTrip == null)
-            {
-                return NotFound($"טיול עם מזהה {id} לא נמצא במערכת.");
-            }
-
             await _tripService.Delete(id);
             return NoContent();
         }
