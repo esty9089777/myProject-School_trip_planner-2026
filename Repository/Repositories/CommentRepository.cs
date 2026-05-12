@@ -49,9 +49,9 @@ namespace Repository.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<Comment> GetById(int id)
+        public async Task<Comment> GetById(int id)
         {
-            return _ctx.Comments.FirstOrDefaultAsync(x => x.CommentId == id);
+            return await _ctx.Comments.FirstOrDefaultAsync(x => x.CommentId == id);
         }
 
         public async Task<List<Comment>> GetCommentByBranchId(int branchId)
