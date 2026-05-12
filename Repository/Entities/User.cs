@@ -15,7 +15,7 @@ namespace Repository.Entities
         User,
         BusinessOwner
     }
-    public class User : IOwnable
+    public class User
     {
         public int UserId { get; set; }
         public string UserName { get; set; }

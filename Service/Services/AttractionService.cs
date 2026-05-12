@@ -101,5 +101,10 @@ namespace Service.Services
             var list = await GetAll();
             return list.FirstOrDefault(a => a.AttractionId == attraction.AttractionId);
         }
+
+        public Task<AttractionDto> Exist(LoginDto l)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

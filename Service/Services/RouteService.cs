@@ -47,12 +47,12 @@ namespace Service.Services
         public async Task Delete(int id)
         {
             var route = await _repository.GetById(id);
-            entity.ValidateOwnership(currentUserId, isAdmin);
 
             if (route == null)
             {
-                throw new Exception("Route not found");
+                throw new KeyNotFoundException("Route not found");
             }
+
             await _repository.Delete(id);
         }
 

@@ -18,6 +18,7 @@ namespace myProjectTrips.model
         //    _connectionString = connectionString;
         //}
 
+        public virtual DbSet<Trip> Trips { get; set; }
         public virtual DbSet<Availability> Availabilities { get; set; }
         public virtual DbSet<Attraction> Attractions { get; set; }
         public virtual DbSet<Branch> Branches { get; set; }

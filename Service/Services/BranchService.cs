@@ -146,5 +146,10 @@ namespace Service.Services
             var list = await GetAll();
             return list.FirstOrDefault(a => a.BranchId == branch.BranchId);
         }
+
+        public Task<BranchDto> Exist(LoginDto l)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

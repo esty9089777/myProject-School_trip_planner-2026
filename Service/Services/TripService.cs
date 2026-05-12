@@ -102,5 +102,10 @@ namespace Service.Services
             var list = await GetAll();
             return list.FirstOrDefault(a => a.TripId == trip.TripId);
         }
+
+        public Task<TripDto> Exist(LoginDto l)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

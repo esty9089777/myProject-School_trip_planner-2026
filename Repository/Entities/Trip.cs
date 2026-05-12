@@ -9,5 +9,6 @@ namespace Repository.Entities
         public User User { get; set; } = null!;
         public List<Route> Routes { get; set; }
         public List<Branch> Branches { get; set; }
+        public int CreatorId => UserId;
     }
 }
