@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Repository.Repositories
 {
-    public class RouteRepository : IRepository<Route>
+    public class RouteRepository : IRouteRepository
     {
         private readonly IContext _ctx;
         private readonly IMapper _mapper;
@@ -66,5 +66,16 @@ namespace Repository.Repositories
             await _ctx.Save();
             return existingRoute;
         }
+
+        public async Task<List<Route>> GetNearbyRoute(double lat, double lng)
+        {
+            double offset = 0.1;
+
+            return await _ctx.Routes
+                .Where(x => x.Latitude >= lat - offset && x.Latitude <= lat + offset &&
+                            x.Longitude >= lng - offset && x.Longitude <= lng + offset)
+                .ToListAsync();
+        }
+
     }
 }

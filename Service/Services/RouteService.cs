@@ -12,13 +12,13 @@ using System.Threading.Tasks;
 
 namespace Service.Services
 {
-    public class RouteService : IService<RouteDto>, IsExist<RouteDto>
+    public class RouteService : IRouteService, IsExist<RouteDto>
     {
-        private readonly IRepository<Route> _repository;
+        private readonly IRouteRepository _repository;
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
 
-        public RouteService(IRepository<Route> repository, IMapper mapper, IUserService userService)
+        public RouteService(IRouteRepository repository, IMapper mapper, IUserService userService)
         {
             _repository = repository;
             _mapper = mapper;
@@ -86,6 +86,69 @@ namespace Service.Services
         {
             var list = await GetAll();
             return list.FirstOrDefault(a => a.RouteId == route.RouteId);
+        }
+
+        public async Task<List<RouteDto>> GetNearbyRoute(double lat, double lng)
+        {
+            var routes = await _repository.GetNearbyRoute(lat, lng);
+
+            var sortedRoutes = routes
+                .OrderBy(r => Math.Pow(r.Latitude - lat, 2) + Math.Pow(r.Longitude - lng, 2))
+                .Take(5)
+                .ToList();
+
+            return _mapper.Map<List<RouteDto>>(sortedRoutes);
+        }
+
+        public async Task<bool> DeleteProtected(int routeId, int currentUserId, bool isAdmin)
+        {
+            var route = await _repository.GetById(routeId);
+
+            if (route == null)
+                throw new KeyNotFoundException("המסלול לא נמצא");
+
+            bool isOwner = false;
+
+            if (route != null)
+            {
+                isOwner = route.CreatorId == currentUserId;
+            }
+
+            if (isOwner || isAdmin)
+            {
+                await _repository.Delete(routeId);
+                return true;
+            }
+            else
+            {
+                throw new UnauthorizedAccessException("אין לך הרשאה למחוק מסלול זה");
+            }
+        }
+
+        public async Task<RouteDto> UpdateProtected(int id, RouteDto route, int currentUserId, bool isAdmin)
+        {
+            var existingRoute = await _repository.GetById(id);
+
+            if (existingRoute == null)
+                throw new KeyNotFoundException("המסלול לא נמצא");
+
+            bool isOwner = existingRoute.CreatorId == currentUserId;
+
+            if (isOwner || isAdmin)
+            {
+                _mapper.Map(route, existingRoute);
+                var updatedEntity = await _repository.Update(id, existingRoute);
+                return _mapper.Map<RouteDto>(updatedEntity);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException("אין לך הרשאה לעדכן מסלול זה");
+            }
+        }
+
+        public Task<RouteDto> Exist(LoginDto l)
+        {
+            throw new NotImplementedException();
         }
     }
 }
