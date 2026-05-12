@@ -94,6 +94,53 @@ namespace Service.Services
             return _mapper.Map<BranchDto>(updatedBranch);
         }
 
+        public async Task<BranchDto> UpdateProtected(int id, BranchDto branchDto, int currentUserId, bool isAdmin)
+        {
+            var existingBranch = await _repository.GetById(id);
+
+            if (existingBranch == null)
+                throw new KeyNotFoundException("הסניף לא נמצא");
+
+            bool isOwner = existingBranch.Attraction?.CreatorId == currentUserId;
+
+            if (isOwner || isAdmin)
+            {
+                _mapper.Map(branchDto, existingBranch);
+                var updatedEntity = await _repository.Update(id, existingBranch);
+                return _mapper.Map<BranchDto>(updatedEntity);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException("אין לך הרשאה לעדכן סניף זה");
+            }
+        }
+
+        public async Task<bool> DeleteProtected(int branchId, int currentUserId, bool isAdmin)
+        {
+            var branch = await _repository.GetById(branchId);
+
+            if (branch == null)
+                throw new KeyNotFoundException("הסניף לא נמצא");
+
+            bool isOwner = false;
+
+            if (branch != null)
+            {
+                isOwner = branch.Attraction.CreatorId == currentUserId;
+            }
+
+            if (isOwner || isAdmin)
+            {
+                await _repository.Delete(branchId);
+                return true;
+            }
+            else
+            {
+                throw new UnauthorizedAccessException("אין לך הרשאה למחוק סניף זה");
+            }
+        }
+
+
         public async Task<BranchDto> Exist(BranchDto branch)
         {
             var list = await GetAll();

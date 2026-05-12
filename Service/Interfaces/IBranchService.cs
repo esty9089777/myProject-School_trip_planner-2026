@@ -11,5 +11,7 @@ namespace Service.Interfaces
     {
         Task<List<BranchDto>> GetBranchesByAttractionId(int AttractionId);
         Task<List<BranchDto>> GetNearbyBranches(double lat, double lng);
+        Task<bool> DeleteProtected(int branchId, int currentUserId, bool isAdmin);
+        Task<BranchDto> UpdateProtected(int id, BranchDto branch, int currentUserId, bool isAdmin);
     }
 }
