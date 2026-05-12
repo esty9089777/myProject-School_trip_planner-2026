@@ -2,9 +2,11 @@
 using Common.Dto;
 using Repository.Entities;
 using Repository.Interfaces;
+using Repository.Repositories;
 using Service.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -145,6 +147,55 @@ namespace Service.Services
             _mapper.Map(item, availability);
             var updatedAvailability = await _repository.Update(availability.AvailabilityId, availability);
             return _mapper.Map<AvailabilityDto>(updatedAvailability);
+        }
+
+        public async Task<AvailabilityDto> UpdateProtected(int id, AvailabilityDto availabilityDto, int currentUserId, bool isAdmin)
+        {
+            var existingAvailability = await _repository.GetById(id);
+            if (existingAvailability == null) 
+                return null;
+
+            bool isOwner = false;
+
+            if (existingAvailability.Attraction != null)
+            {
+                isOwner = existingAvailability.Attraction.CreatorId == currentUserId;
+            }
+            else if (existingAvailability.Route != null)
+            {
+                isOwner = existingAvailability.Route.CreatorId == currentUserId;
+            }
+
+            if (isOwner || isAdmin)
+            {
+                return await Update(id, availabilityDto);
+            }
+            throw new UnauthorizedAccessException("אין לך הרשאה לעדכן זמינות זו.");
+        }
+
+        public async Task<bool> DeleteProtected(int id, int currentUserId, bool isAdmin)
+        {
+            var existingAvailability = await _repository.GetById(id);
+            if (existingAvailability == null) return false;
+
+            bool isOwner = false;
+
+            if (existingAvailability.Attraction != null)
+            {
+                isOwner = existingAvailability.Attraction.CreatorId == currentUserId;
+            }
+            else if (existingAvailability.Route != null)
+            {
+                isOwner = existingAvailability.Route.CreatorId == currentUserId;
+            }
+
+            if (isOwner || isAdmin)
+            {
+                await Delete(id);
+                return true;
+            }
+
+            throw new UnauthorizedAccessException("אין לך הרשאה למחוק זמינות זו.");
         }
 
         public async Task<AvailabilityDto> Exist(AvailabilityDto availability)

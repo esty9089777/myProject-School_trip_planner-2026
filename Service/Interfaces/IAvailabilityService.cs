@@ -14,5 +14,8 @@ namespace Service.Interfaces
         Task<List<AvailabilityDto>> GetAvailabilityByRouteId(int routeId);
         Task<AvailabilityDto> IsBranchAvailable(int branchId, DayOfWeek day, TimeOnly time);
         Task<AvailabilityDto> IsRouteAvailable(int routeId, DayOfWeek day, TimeOnly time);
+
+        Task<AvailabilityDto> UpdateProtected(int id, AvailabilityDto availability, int currentUserId, bool isAdmin);
+        Task<bool> DeleteProtected(int id, int currentUserId, bool isAdmin);
     }
 }
