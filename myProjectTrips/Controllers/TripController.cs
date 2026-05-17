@@ -61,7 +61,6 @@ namespace myProject_trips.Controllers
             return Ok(trip);
         }
 
-        [HttpPut("{id}")]
         [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] TripDto tripDto)
