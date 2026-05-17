@@ -58,6 +58,17 @@ namespace myProjectTrips.model
             modelBuilder.Entity<Availability>()
                 .HasIndex(a => a.Day);
 
+            modelBuilder.Entity<Branch>()
+                .HasOne(b => b.Attraction)
+                .WithMany(a => a.Branches)
+                .HasForeignKey(b => b.AttractionId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Route>()
+                .HasOne(r => r.Creator)               
+                .WithMany()                           
+                .HasForeignKey(r => r.CreatorId)     
+                .OnDelete(DeleteBehavior.Restrict); 
         }
     }
 }
