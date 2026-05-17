@@ -16,10 +16,10 @@ namespace Service.Services
     {
         private readonly IRepository<Attraction> _repository;
         private readonly IMapper _mapper;
-        private readonly IRepository<Branch> _branchRepository;
+        private readonly IBranchRepository _branchRepository;
         private readonly IUserService _userService;
 
-        public AttractionService(IRepository<Attraction> repository, IMapper mapper, IRepository<Branch> branchRepository, IUserService userService)
+        public AttractionService(IRepository<Attraction> repository, IMapper mapper, IBranchRepository branchRepository, IUserService userService)
         {
             _repository = repository;
             _mapper = mapper;

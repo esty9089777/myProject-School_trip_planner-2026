@@ -15,9 +15,9 @@ namespace Service.Services
     {
         private readonly IBranchRepository _repository;
         private readonly IMapper _mapper;
-        private readonly IService<Attraction> _attractionService;
+        private readonly IService<AttractionDto> _attractionService;
 
-        public BranchService(IBranchRepository repository, IMapper mapper, IService<Attraction> attractionService)
+        public BranchService(IBranchRepository repository, IMapper mapper, IService<AttractionDto> attractionService)
         {
             _repository = repository;
             _mapper = mapper;

@@ -18,7 +18,7 @@ namespace Service.Services
         {
             services.AddScoped<ITripRepository, TripRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IRepository<Route>, RouteRepository>();
+            services.AddScoped<IRouteRepository, RouteRepository>();
             services.AddScoped<IRepository<Attraction>, AttractionRepository>();
             services.AddScoped<IAvailabilityRepository, AvailabilityRepository>();
             services.AddScoped<IBranchRepository, BranchRepository>();
@@ -26,7 +26,7 @@ namespace Service.Services
 
             services.AddScoped<ITripService, TripService>();
             services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IService<RouteDto>, RouteService>();
+            services.AddScoped<IRouteService, RouteService>();
             services.AddScoped<IService<AttractionDto>, AttractionService>();
             services.AddScoped<IAvailabilityService, AvailabilityService>();
             services.AddScoped<IBranchService, BranchService>();

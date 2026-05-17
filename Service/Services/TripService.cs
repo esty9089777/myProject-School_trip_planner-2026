@@ -13,12 +13,12 @@ namespace Service.Services
 {
     public class TripService : ITripService, IsExist<TripDto>
     {
-        private readonly IRepository<Trip> _repository;
+        private readonly ITripRepository _repository;
         private readonly IMapper _mapper;
         private readonly IBranchRepository _branchRepository;
-        private readonly IRepository<Route> _routeRepository;
+        private readonly IRouteRepository _routeRepository;
 
-        public TripService(IRepository<Trip> repository, IMapper mapper, IBranchRepository branchRepository, IRepository<Route> routeRepository)
+        public TripService(ITripRepository repository, IMapper mapper, IBranchRepository branchRepository, IRouteRepository routeRepository)
         {
             _repository = repository;
             _mapper = mapper;

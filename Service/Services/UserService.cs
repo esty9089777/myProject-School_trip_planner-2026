@@ -13,18 +13,18 @@ namespace Service.Services
 {
     public class UserService : IUserService, IsExist<UserDto>
     {
-        private readonly IRepository<User> _repository;
+        private readonly IUserRepository _repository;
         private readonly IMapper _mapper;
         private readonly ITripService _tripService;
 
-        public UserService(IRepository<User> repository, IMapper mapper, ITripService tripService)
+        public UserService(IUserRepository repository, IMapper mapper, ITripService tripService)
         {
             _repository = repository;
             _mapper = mapper;
             _tripService = tripService;
         }
 
-        public async Task<UserDto> Add(UserDto item)
+        public Task<UserDto> Add(UserDto item)
         {
             throw new NotImplementedException("Use Register method for new users");
         }
